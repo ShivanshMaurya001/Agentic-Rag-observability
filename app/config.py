@@ -1,0 +1,2 @@
+RETRIEVER_TYPE = "dense"
+K_DEFAULT = 5
