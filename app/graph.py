@@ -188,10 +188,8 @@ def answered_node(state: GraphState) -> GraphState:
 def abstain_node(state: GraphState) -> GraphState:
     return {
         **state,
-        "answer": "The answer could not be reliably determined from the document.",
         "final_outcome": "abstained_judge_rejected",
     }
-
 
 builder = StateGraph(GraphState)
 

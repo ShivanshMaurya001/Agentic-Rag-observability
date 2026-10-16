@@ -485,6 +485,4 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
         "retrieval",
     ]
     assert result["final_outcome"] == "abstained_judge_rejected"
-    assert result["answer"] == (
-        "The answer could not be reliably determined from the document."
-    )
+    
