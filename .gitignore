@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 data/traces.db
 chroma_db/
+.pytest_tmp/
+
+
+## KNOWN_ISSUES
+
+- **Judge latency:** `judge_latency_ms` is recorded as `0` in SQLite on `main`; a callback-based attempt exists on branch `wip/callback-timing` and is unverified.
+- **Cost fields:** Cost values are currently unmeasured placeholders (`0`). Do not present them as measured costs or display them in the dashboard unless actual cost measurement is implemented and verified.
