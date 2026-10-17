@@ -1,3 +1,5 @@
+
+from app.abstain import abstain_node
 from app.embedding_service import client
 from app.judge import judge_answer
 from app.retriever import retrieve
@@ -148,7 +150,7 @@ Answer:
         "attempt_number": state["attempt_number"] + 1,
     }
 
-# answer of the state graph after the judge node, based on the judge verdict and attempt number
+
 def route_after_attempt(state: GraphState) -> str:
     verdict = state["judge_verdict"]
 
@@ -171,7 +173,6 @@ def route_after_attempt(state: GraphState) -> str:
         f"Unexpected failure type: {verdict.failure_type}"
     )
 
-# nodes and edges for the state graph 
 
 def answered_node(state: GraphState) -> GraphState:
     if state["attempt_number"] == 0:
@@ -184,12 +185,6 @@ def answered_node(state: GraphState) -> GraphState:
         "final_outcome": outcome,
     }
 
-
-def abstain_node(state: GraphState) -> GraphState:
-    return {
-        **state,
-        "final_outcome": "abstained_judge_rejected",
-    }
 
 builder = StateGraph(GraphState)
 
