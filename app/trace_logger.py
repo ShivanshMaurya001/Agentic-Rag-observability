@@ -1,5 +1,5 @@
+
 import json
-import sqlite3
 from typing import Any
 
 from app.db import get_connection
@@ -33,8 +33,7 @@ def log_attempt(
                 judge_answer_quality, judge_failure_type, judge_reason,
                 retrieve_latency_ms, generate_latency_ms, judge_latency_ms,
                 retrieve_cost, generate_cost, judge_cost, latency_ms, cost
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 run_id,
@@ -66,15 +65,19 @@ def log_run(
     total_attempts: int,
     total_latency_ms: float = 0,
     total_cost: float = 0,
+    mode: str = "corrected",
+    is_adversarial: bool = False,
 ) -> None:
+    if mode not in {"baseline", "corrected"}:
+        raise ValueError("mode must be 'baseline' or 'corrected'")
+
     with get_connection() as connection:
         connection.execute(
             """
             INSERT INTO runs (
                 run_id, original_query, final_outcome, total_attempts,
-                total_latency_ms, total_cost
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
+                total_latency_ms, total_cost, mode, is_adversarial
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 run_id,
@@ -83,6 +86,7 @@ def log_run(
                 total_attempts,
                 total_latency_ms,
                 total_cost,
+                mode,
+                is_adversarial,
             ),
         )
-
