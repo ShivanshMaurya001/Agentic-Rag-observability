@@ -1,3 +1,4 @@
+
 import sqlite3
 from pathlib import Path
 
@@ -50,7 +51,26 @@ def init_db() -> None:
                 total_attempts INTEGER NOT NULL,
                 total_latency_ms REAL,
                 total_cost REAL,
+                mode TEXT NOT NULL DEFAULT 'corrected',
+                is_adversarial BOOLEAN NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         """)
 
+        # Migrate existing databases without deleting stored traces.
+        run_columns = {
+            row["name"]
+            for row in connection.execute("PRAGMA table_info(runs)").fetchall()
+        }
+
+        if "mode" not in run_columns:
+            connection.execute("""
+                ALTER TABLE runs
+                ADD COLUMN mode TEXT NOT NULL DEFAULT 'corrected'
+            """)
+
+        if "is_adversarial" not in run_columns:
+            connection.execute("""
+                ALTER TABLE runs
+                ADD COLUMN is_adversarial BOOLEAN NOT NULL DEFAULT 0
+            """)
