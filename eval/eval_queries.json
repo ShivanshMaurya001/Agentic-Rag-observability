@@ -1,0 +1,430 @@
+[
+  {
+    "query": "What is a large language model?",
+    "is_adversarial": false,
+    "expected_answer": "A large language model is a neural network trained on massive amounts of text to predict the next token in a sequence.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+    ]
+  },
+  {
+    "query": "Which architecture do modern LLMs use, and which paper introduced it?",
+    "is_adversarial": false,
+    "expected_answer": "Modern LLMs use the Transformer architecture, introduced in the 2017 paper Attention Is All You Need.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+    ]
+  },
+  {
+    "query": "What does Byte Pair Encoding do?",
+    "is_adversarial": false,
+    "expected_answer": "Byte Pair Encoding breaks text into frequently occurring subword chunks, which may be whole words, word parts, or individual characters.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "What are Query, Key, and Value vectors used for in self-attention?",
+    "is_adversarial": false,
+    "expected_answer": "Self-attention uses Query, Key, and Value projections to compute weighted combinations of tokens and determine which input parts are relevant.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+    ]
+  },
+  {
+    "query": "What is the purpose of reinforcement learning from human feedback?",
+    "is_adversarial": false,
+    "expected_answer": "RLHF uses human preference data to further align model outputs with what humans consider helpful, honest, and harmless.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What does temperature control during text generation?",
+    "is_adversarial": false,
+    "expected_answer": "Temperature controls randomness: lower values make generation more deterministic, while higher values increase diversity and creativity at the cost of coherence.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "What is an LLM's context window?",
+    "is_adversarial": false,
+    "expected_answer": "It is the maximum number of tokens an LLM can process in a single request.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5"
+    ]
+  },
+  {
+    "query": "What was the exact benchmark score of the LLM in the 2024 Mars Olympics?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "Which company manufactured the quantum chip used to train the LLM described in the documents?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "How do embeddings represent tokens?",
+    "is_adversarial": false,
+    "expected_answer": "Each token is converted into a dense numerical vector called an embedding, which captures semantic meaning.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "What is multi-head attention?",
+    "is_adversarial": false,
+    "expected_answer": "Multi-head attention uses multiple attention heads in parallel so a Transformer can attend to different types of relationships.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+    ]
+  },
+  {
+    "query": "What happens during pretraining?",
+    "is_adversarial": false,
+    "expected_answer": "Pretraining trains an LLM on a very large, diverse text corpus using the next-token prediction objective.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "How does instruction tuning differ from pretraining?",
+    "is_adversarial": false,
+    "expected_answer": "Instruction tuning uses smaller, curated datasets of instructions and desired responses to teach the model to follow instructions more reliably.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What is the purpose of a reward model in RLHF?",
+    "is_adversarial": false,
+    "expected_answer": "In RLHF, a reward model helps align model outputs with human preferences for helpful, honest, and harmless responses.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What is nucleus sampling?",
+    "is_adversarial": false,
+    "expected_answer": "Nucleus sampling, also called top-p sampling, is a strategy used to select the next token during generation.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "Why can LLMs hallucinate?",
+    "is_adversarial": false,
+    "expected_answer": "LLMs can hallucinate because they generate plausible-sounding but incorrect information from statistical patterns rather than a verified structured database.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "How does RAG help address LLM hallucinations?",
+    "is_adversarial": false,
+    "expected_answer": "RAG grounds generated answers in retrieved, verifiable source documents instead of relying only on the model's internal knowledge.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "Who won the 2025 International LLM Cooking Championship, and what was their score?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "What is the home address of the lead author of the Transformer paper?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "According to these documents, what exact date will the next generation of LLMs become fully conscious?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  }
+
+  ,
+  {
+    "query": "How do Transformers differ from recurrent neural networks?",
+    "is_adversarial": false,
+    "expected_answer": "Transformers use self-attention to weigh the relevance of tokens regardless of their distance, unlike earlier recurrent architectures such as RNNs and LSTMs.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+    ]
+  },
+  {
+    "query": "Why are tokens used instead of requiring a separate vocabulary entry for every possible word?",
+    "is_adversarial": false,
+    "expected_answer": "Subword tokenization can represent rare or unseen terms by combining smaller known units, avoiding the need for an infinitely large vocabulary.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "What does an embedding capture?",
+    "is_adversarial": false,
+    "expected_answer": "An embedding is a dense numerical vector that captures semantic meaning, with semantically similar words tending to have nearby embeddings.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "Why do Transformers use multiple attention heads?",
+    "is_adversarial": false,
+    "expected_answer": "Multiple attention heads allow Transformers to attend to different types of relationships in parallel, such as syntax and long-range topical relevance.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+    ]
+  },
+  {
+    "query": "What is the main objective of pretraining an LLM?",
+    "is_adversarial": false,
+    "expected_answer": "Pretraining uses a large, diverse text corpus and the next-token prediction objective to develop general knowledge and language ability.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What kind of data is used for instruction tuning?",
+    "is_adversarial": false,
+    "expected_answer": "Instruction tuning uses smaller, curated datasets containing instructions and desired responses.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What is the difference between low and high temperature during generation?",
+    "is_adversarial": false,
+    "expected_answer": "Lower temperature makes generation more deterministic and focused, while higher temperature increases diversity and creativity but can reduce coherence.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "What is greedy decoding?",
+    "is_adversarial": false,
+    "expected_answer": "Greedy decoding is a sampling strategy used to select the next token during inference.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "How many parameters did the LLM in these documents have?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "What exact GPU model and number of GPUs were used to pretrain the LLM discussed in these documents?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  }
+
+  ,
+  {
+    "query": "How does self-attention help a Transformer process tokens that are far apart?",
+    "is_adversarial": false,
+    "expected_answer": "Self-attention lets the model weigh the relevance of other tokens regardless of their distance in the sequence.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+    ]
+  },
+  {
+    "query": "Why can subword tokenization handle rare or unseen terms?",
+    "is_adversarial": false,
+    "expected_answer": "It can represent rare or unseen terms by combining smaller known subword units.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "How are semantically similar words represented in embedding space?",
+    "is_adversarial": false,
+    "expected_answer": "Words with similar meanings tend to have embeddings that are close together in the high-dimensional vector space.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "What are the three learned projections used by self-attention?",
+    "is_adversarial": false,
+    "expected_answer": "The three learned projections are Query, Key, and Value.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+    ]
+  },
+  {
+    "query": "What is one example of a relationship a Transformer attention head may focus on?",
+    "is_adversarial": false,
+    "expected_answer": "An attention head may focus on syntactic structure or long-range topical relevance.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+    ]
+  },
+  {
+    "query": "Why does pretraining require substantial computational resources?",
+    "is_adversarial": false,
+    "expected_answer": "Pretraining uses a very large, diverse text corpus to train the model with the next-token prediction objective and requires enormous computational resources.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What does instruction tuning aim to improve?",
+    "is_adversarial": false,
+    "expected_answer": "Instruction tuning teaches a model to follow user instructions more reliably using curated instructions and desired responses.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+    ]
+  },
+  {
+    "query": "What does the next-token prediction objective do during inference?",
+    "is_adversarial": false,
+    "expected_answer": "During inference, the model produces a probability distribution over the vocabulary for the next token, and a sampling strategy selects a token.",
+    "relevant_chunks": [
+      "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"
+    ]
+  },
+  {
+    "query": "What exact context-window size, measured in tokens, does the document's LLM have?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "Which specific dataset and version were used to train the LLM described in the document?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+    {
+    "query": "What role do embeddings play in representing text for a language model?",
+    "is_adversarial": false,
+    "expected_answer": "Embeddings represent tokens as numerical vectors that a language model can process.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"]
+  },
+  {
+    "query": "How does self-attention help a model use information from different tokens?",
+    "is_adversarial": false,
+    "expected_answer": "Self-attention lets tokens incorporate information from other tokens in the input sequence.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"]
+  },
+  {
+    "query": "What are query, key, and value projections used for in attention?",
+    "is_adversarial": false,
+    "expected_answer": "Query, key, and value projections provide the representations used to calculate attention weights and combine information.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"]
+  },
+  {
+    "query": "Why can a transformer use multiple attention heads?",
+    "is_adversarial": false,
+    "expected_answer": "Multiple attention heads allow the model to process different relationships or aspects of the input in parallel.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"]
+  },
+  {
+    "query": "What is the purpose of pretraining a language model?",
+    "is_adversarial": false,
+    "expected_answer": "Pretraining lets a language model learn patterns from large amounts of text before being adapted for specific tasks.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"]
+  },
+  {
+    "query": "How does instruction tuning affect a pretrained language model?",
+    "is_adversarial": false,
+    "expected_answer": "Instruction tuning adapts a pretrained model to follow instructions and respond more appropriately to user requests.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"]
+  },
+  {
+    "query": "What does next-token prediction mean during language generation?",
+    "is_adversarial": false,
+    "expected_answer": "The model predicts a probability distribution over the next token based on the preceding context.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5"]
+  },
+  {
+    "query": "How are tokenization and embeddings different?",
+    "is_adversarial": false,
+    "expected_answer": "Tokenization splits text into tokens, while embeddings map tokens to numerical vector representations.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0", "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"]
+  },
+  {
+    "query": "What exact maximum context-window size does the PDF specify for the model discussed?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "Which exact date and dataset version were used for the model's training run?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+    {
+    "query": "Why is the transformer architecture useful for processing sequences?",
+    "is_adversarial": false,
+    "expected_answer": "The transformer uses attention mechanisms to process relationships between tokens in a sequence.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"]
+  },
+  {
+    "query": "What information does an attention mechanism use to determine token relationships?",
+    "is_adversarial": false,
+    "expected_answer": "Attention uses query and key representations to calculate attention weights and uses value representations to combine information.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"]
+  },
+  {
+    "query": "How does a language model use the context preceding the next token?",
+    "is_adversarial": false,
+    "expected_answer": "The model uses preceding context to estimate probabilities for the next token during generation.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5"]
+  },
+  {
+    "query": "What is the difference between a token and its embedding?",
+    "is_adversarial": false,
+    "expected_answer": "A token is a unit of text produced by tokenization, while its embedding is a numerical vector representation.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0", "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"]
+  },
+  {
+    "query": "Why is a pretrained language model adapted after its initial training?",
+    "is_adversarial": false,
+    "expected_answer": "A pretrained model can be adapted through further training, such as instruction tuning, to better follow user instructions.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4"]
+  },
+  {
+    "query": "What does a probability distribution over next tokens represent?",
+    "is_adversarial": false,
+    "expected_answer": "It represents the model's estimated probabilities for possible next tokens given the preceding context.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5"]
+  },
+  {
+    "query": "How can multiple attention heads help a transformer represent relationships in text?",
+    "is_adversarial": false,
+    "expected_answer": "Multiple attention heads allow the transformer to learn or represent different relationships between tokens in parallel.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"]
+  },
+  {
+    "query": "How are text tokens converted into representations that a model can process?",
+    "is_adversarial": false,
+    "expected_answer": "Text is tokenized into units, and those tokens are represented numerically using embeddings.",
+    "relevant_chunks": ["9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0", "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"]
+  },
+  {
+    "query": "What exact number of attention heads does the PDF's model configuration use?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  },
+  {
+    "query": "What exact hardware and GPU count were used to train the model described in the PDF?",
+    "is_adversarial": true,
+    "expected_answer": null,
+    "relevant_chunks": []
+  }
+
+]
