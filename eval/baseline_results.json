@@ -1,0 +1,384 @@
+{
+  "results": {
+    "baseline": [
+      {
+        "answer": "Based on the document, a Large Language Model (LLM) is a type of neural network trained on massive amounts of text data to predict the next word, or more precisely the next token, in a sequence.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.45859843492507935
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.5605995059013367
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+            "text": "al parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum number of tokens they\ncan process in a single request, and their knowledge is limited to what was present in their training\ndata up to a specific cutoff date.",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6231819987297058
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+            "text": " at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the next token, and a sampling strategy, such as greedy\ndecoding, top-k sampling, or nucleus (top-p) sampling, is used to select the next token.\nParameters like temperature control the randomness of this selection: lower temperature values\nmake the output more deterministic and focused, while higher values increase diversity and creativity\nat the cost of coherence.\n6. Limitations\nLLMs are known to hallucinate, meaning they can generate plausible-sounding but factually incorrect\ninformation, since their knowledge is derived from statistical patterns rather than a verified, structured\ndatabase of facts. This is a key motivation behind Retrieval-Augmented Generation (RAG) systems,\nwhich ground model outputs in retrieved, verifiable source documents rather than relying solely on the\nmodel's internal parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6338602900505066
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.6518331170082092
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 1.0,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "What is a large language model?"
+      },
+      {
+        "answer": "Based on the provided document, modern LLMs are built on the **Transformer architecture**, which was introduced in the 2017 paper **'Attention Is All You Need'**.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5108174681663513
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+            "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.5705932974815369
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.6268312931060791
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6322818994522095
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+            "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.6524678468704224
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 0.9166666666666666,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "Which architecture do modern LLMs use, and which paper introduced it?"
+      },
+      {
+        "answer": "Based on the provided document, Byte Pair Encoding (BPE) is a tokenization algorithm that breaks text into frequently occurring chunks, which can be whole words, parts of words, or individual characters for rare terms.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.7158512473106384
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+            "text": "Tokenization and Text Preprocessing\nFrom raw documents to model-ready text\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. What Tokenization Does\nTokenization converts text into units a model can process. A tokenizer may split a word into one token or several\nsubword pieces. For example, an uncommon technical term might be represented by multiple fragments rather\nthan a single token. Token IDs are vocabulary indices, not semantic scores. The embedding layer later maps these\nIDs to vectors.\n2. Why Subword Tokenization Is Useful\nA vocabulary containing every possible word would be huge and would struggle with new names, spelling\nvariations, and technical terms. Subword methods balance vocabulary size with coverage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 1,
+            "score": 0.7577692866325378
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+            "text": "overage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This is especially useful for scientific writing,\ncode, product names, and multilingual text. Different model families use different tokenization algorithms and\nvocabularies, so token counts can differ for the same passage.\n3. Characters, Words, Tokens, and Chunks\nCharacters, words, model tokens, and retrieval chunks are different units. A 1,000-character passage is not\nnecessarily a fixed number of tokens. A chunk is a segment selected by an application for storage and retrieval; it\nmay be defined by characters, tokens, sentences, or document structure. When comparing chunking strategies,\nrecord the actual method and parameters rather than assuming that a character limit corresponds to a universal\ntoken count.\n4. Preprocessing PDF Text\nPDF extraction can introduce broken line endings, repeated headers, page numbers, hyphenated words, or\nreading-order problems. A preprocessing pipeline shoul",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 1,
+            "score": 0.8006550669670105
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+            "text": "Key Takeaways\nTokenization is a model-specific conversion from text to token IDs. It is distinct from PDF extraction, text cleaning,\nand retrieval chunking. Reliable preprocessing preserves meaning, provenance, and document structure while\nremoving accidental noise.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 2,
+            "score": 0.8137083053588867
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+            "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.8217539191246033
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+        ],
+        "answer_correctness_score": 0.8333333333333334,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "What does Byte Pair Encoding do?"
+      }
+    ],
+    "corrected": [
+      {
+        "answer": "Based on the provided document, a Large Language Model (LLM) is a type of neural network trained on massive amounts of text data to predict the next word, or more precisely the next token, in a sequence.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.45859843492507935
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.5605995059013367
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+            "text": "al parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum number of tokens they\ncan process in a single request, and their knowledge is limited to what was present in their training\ndata up to a specific cutoff date.",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6231819987297058
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+            "text": " at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the next token, and a sampling strategy, such as greedy\ndecoding, top-k sampling, or nucleus (top-p) sampling, is used to select the next token.\nParameters like temperature control the randomness of this selection: lower temperature values\nmake the output more deterministic and focused, while higher values increase diversity and creativity\nat the cost of coherence.\n6. Limitations\nLLMs are known to hallucinate, meaning they can generate plausible-sounding but factually incorrect\ninformation, since their knowledge is derived from statistical patterns rather than a verified, structured\ndatabase of facts. This is a key motivation behind Retrieval-Augmented Generation (RAG) systems,\nwhich ground model outputs in retrieved, verifiable source documents rather than relying solely on the\nmodel's internal parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6338602900505066
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.6518331170082092
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 1.0,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "What is a large language model?"
+      },
+      {
+        "answer": "Based on the provided document, modern LLMs are built on the **Transformer architecture**, which was introduced in the 2017 paper **'Attention Is All You Need'**.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5108174681663513
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+            "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.5705932974815369
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.6268312931060791
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6322818994522095
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+            "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.6524678468704224
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 0.9166666666666666,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "Which architecture do modern LLMs use, and which paper introduced it?"
+      },
+      {
+        "answer": "Based on the provided document, Byte Pair Encoding (BPE) is a tokenization algorithm that breaks text into frequently occurring chunks. These chunks may be whole words, parts of words, or individual characters for rare terms.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.7158512473106384
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+            "text": "Tokenization and Text Preprocessing\nFrom raw documents to model-ready text\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. What Tokenization Does\nTokenization converts text into units a model can process. A tokenizer may split a word into one token or several\nsubword pieces. For example, an uncommon technical term might be represented by multiple fragments rather\nthan a single token. Token IDs are vocabulary indices, not semantic scores. The embedding layer later maps these\nIDs to vectors.\n2. Why Subword Tokenization Is Useful\nA vocabulary containing every possible word would be huge and would struggle with new names, spelling\nvariations, and technical terms. Subword methods balance vocabulary size with coverage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 1,
+            "score": 0.7577692866325378
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+            "text": "overage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This is especially useful for scientific writing,\ncode, product names, and multilingual text. Different model families use different tokenization algorithms and\nvocabularies, so token counts can differ for the same passage.\n3. Characters, Words, Tokens, and Chunks\nCharacters, words, model tokens, and retrieval chunks are different units. A 1,000-character passage is not\nnecessarily a fixed number of tokens. A chunk is a segment selected by an application for storage and retrieval; it\nmay be defined by characters, tokens, sentences, or document structure. When comparing chunking strategies,\nrecord the actual method and parameters rather than assuming that a character limit corresponds to a universal\ntoken count.\n4. Preprocessing PDF Text\nPDF extraction can introduce broken line endings, repeated headers, page numbers, hyphenated words, or\nreading-order problems. A preprocessing pipeline shoul",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 1,
+            "score": 0.8006550669670105
+          },
+          {
+            "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+            "text": "Key Takeaways\nTokenization is a model-specific conversion from text to token IDs. It is distinct from PDF extraction, text cleaning,\nand retrieval chunking. Reliable preprocessing preserves meaning, provenance, and document structure while\nremoving accidental noise.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+            "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+            "page": 2,
+            "score": 0.8137083053588867
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+            "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.8217539191246033
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+          "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+        ],
+        "answer_correctness_score": 0.8333333333333334,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "What does Byte Pair Encoding do?"
+      }
+    ]
+  },
+  "metrics": {
+    "baseline": {
+      "total_queries": 3,
+      "hallucination_rate": 0.0,
+      "false_answer_rate": 0.0,
+      "correct_abstention_rate": 0.0,
+      "abstention_rate": 0.0,
+      "recall_at_k": 1.0,
+      "hit_rate_at_k": 1.0,
+      "answer_correctness": 1.0,
+      "mean_answer_correctness_score": 0.9166666666666666,
+      "retry_success_rate": 0.0,
+      "average_retries": 0.0
+    },
+    "corrected": {
+      "total_queries": 3,
+      "hallucination_rate": 0.0,
+      "false_answer_rate": 0.0,
+      "correct_abstention_rate": 0.0,
+      "abstention_rate": 0.0,
+      "recall_at_k": 1.0,
+      "hit_rate_at_k": 1.0,
+      "answer_correctness": 1.0,
+      "mean_answer_correctness_score": 0.9166666666666666,
+      "retry_success_rate": 0.0,
+      "average_retries": 0.0
+    }
+  }
+}
