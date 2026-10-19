@@ -23,3 +23,11 @@
 Baseline and corrected evaluation report hallucination rate, False Answer Rate, Correct Abstention Rate, and general abstention rate, alongside the additional retrieval and retry metrics implemented by the evaluation runner.
 
 **Metric interpretation:** Cost fields are placeholders until actual cost measurement is implemented and verified. Judge latency is also a known issue documented under `KNOWN_ISSUES`; do not treat its current SQLite value as measured latency.
+
+## M4 Baseline Evaluation Reuse
+
+- **Baseline reuse:** The evaluation runner can reuse saved initial retrieval and generation results when they are available, avoiding unnecessary repeated generator API calls during corrected evaluation.
+- **Resume behavior:** With `--resume`, previously saved evaluation pairs are reused, and missing pairs are evaluated.
+- **Result persistence:** Evaluation results are written to `eval/baseline_results.json`. Keep this file and its backups out of implementation checkpoint commits unless explicitly required.
+- **Validation:** The focused baseline evaluation tests passed (**14 passed**). The full test suite passed (**30 passed, 2 warnings**).
+- **Limitation:** Reusing saved results depends on the required initial retrieval and answer data being present. These results should not be interpreted as proof that every historical result can be reused.
