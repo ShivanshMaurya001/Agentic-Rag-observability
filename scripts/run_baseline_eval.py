@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Any
 
 from app.db import init_db
-from app.embedding_service import client
 from app.graph import graph
+from app.llm_service import generate_text
 from app.retriever import retrieve
 from app.trace_logger import log_evaluation_row
 from eval.baseline_runner import run_comparison
@@ -53,15 +53,7 @@ Question:
 Answer:
 """.strip()
 
-    response = client.models.generate_content(
-        model=GENERATOR_MODEL,
-        contents=prompt,
-    )
-
-    if response is None or response.text is None:
-        raise ValueError("Generator returned no answer.")
-
-    return response.text.strip()
+    return generate_text(prompt, model=GENERATOR_MODEL).strip()
 
 
 def run_baseline(

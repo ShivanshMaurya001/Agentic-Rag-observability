@@ -56,22 +56,23 @@ def test_missing_field_fails():
 def test_judge_answer_returns_structured_verdict(monkeypatch):
     from app import judge
 
-    class FakeResponse:
-        parsed = {
-            "grounded": True,
-            "retrieval_quality": 1.0,
-            "answer_quality": 0.9,
-            "failure_type": "none",
-            "reason": "The answer is supported by the context.",
-        }
+    parsed_verdict = {
+        "grounded": True,
+        "retrieval_quality": 1.0,
+        "answer_quality": 0.9,
+        "failure_type": "none",
+        "reason": "The answer is supported by the context.",
+    }
+    calls = []
 
-    def fake_generate_content(*args, **kwargs):
-        return FakeResponse()
+    def fake_generate_structured(prompt, model, schema):
+        calls.append((model, schema))
+        return parsed_verdict
 
     monkeypatch.setattr(
-        judge.client.models,
-        "generate_content",
-        fake_generate_content,
+        judge,
+        "generate_structured",
+        fake_generate_structured,
     )
 
     verdict = judge.judge_answer(
@@ -88,26 +89,25 @@ def test_judge_answer_returns_structured_verdict(monkeypatch):
     assert verdict.retrieval_quality == 1.0
     assert verdict.answer_quality == 0.9
     assert verdict.failure_type == "none"
+    assert calls == [(judge.JUDGE_MODEL, judge.JudgeVerdict)]
 
 
 def test_judge_answer_raises_on_missing_structured_response(monkeypatch):
     from app import judge
 
-    class FakeResponse:
-        parsed = None
-
-    def fake_generate_content(*args, **kwargs):
-        return FakeResponse()
+    def fake_generate_structured(*args, **kwargs):
+        from app.llm_service import LLMServiceError
+        raise LLMServiceError("no parsed output")
 
     monkeypatch.setattr(
-        judge.client.models,
-        "generate_content",
-        fake_generate_content,
+        judge,
+        "generate_structured",
+        fake_generate_structured,
     )
 
     with pytest.raises(
         ValueError,
-        match="Gemini judge returned no structured verdict.",
+        match="OpenAI judge did not return a valid verdict.",
     ):
         judge.judge_answer(
             query="What does self-attention do?",
@@ -150,14 +150,8 @@ def test_graph_retries_after_retrieval_failure(monkeypatch):
             }
         ]
 
-    def fake_generate_content(*args, **kwargs):
-        class FakeResponse:
-            text = (
-                "Transformers use self-attention "
-                "to relate tokens."
-            )
-
-        return FakeResponse()
+    def fake_generate_text(prompt, model):
+        return "Transformers use self-attention to relate tokens."
 
     def fake_judge_answer(query, context, answer):
         return next(verdicts)
@@ -182,9 +176,9 @@ def test_graph_retries_after_retrieval_failure(monkeypatch):
         fake_judge_answer,
     )
     monkeypatch.setattr(
-        graph_module.client.models,
-        "generate_content",
-        fake_generate_content,
+        graph_module,
+        "generate_text",
+        fake_generate_text,
     )
 
     # Build a fresh graph so it registers the fake rewrite node.
@@ -276,17 +270,13 @@ def test_graph_retries_generation_with_same_chunks(monkeypatch):
         retrieve_calls.append(query)
         return [chunk]
 
-    def fake_generate_content(*args, **kwargs):
-        generation_prompts.append(kwargs["contents"])
-
-        class FakeResponse:
-            def __init__(self, text):
-                self.text = text
+    def fake_generate_text(prompt, model):
+        generation_prompts.append(prompt)
 
         if len(generation_prompts) == 1:
-            return FakeResponse("Initial answer.")
+            return "Initial answer."
 
-        return FakeResponse("Corrected answer.")
+        return "Corrected answer."
 
     def fake_judge_answer(query, context, answer):
         return next(verdicts)
@@ -298,9 +288,9 @@ def test_graph_retries_generation_with_same_chunks(monkeypatch):
         fake_judge_answer,
     )
     monkeypatch.setattr(
-        graph_module.client.models,
-        "generate_content",
-        fake_generate_content,
+        graph_module,
+        "generate_text",
+        fake_generate_text,
     )
 
     # Fresh graph registers the mocked functions through its nodes.
@@ -399,11 +389,8 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
             }
         ]
 
-    def fake_generate_content(*args, **kwargs):
-        class FakeResponse:
-            text = "An unsupported answer."
-
-        return FakeResponse()
+    def fake_generate_text(prompt, model):
+        return "An unsupported answer."
 
     def fake_judge_answer(query, context, answer):
         return next(verdicts)
@@ -428,9 +415,9 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
         fake_judge_answer,
     )
     monkeypatch.setattr(
-        graph_module.client.models,
-        "generate_content",
-        fake_generate_content,
+        graph_module,
+        "generate_text",
+        fake_generate_text,
     )
 
     builder = StateGraph(graph_module.GraphState)

@@ -3,8 +3,8 @@ import time
 from typing import Any
 
 from app.abstain import abstain_node
-from app.embedding_service import client
 from app.judge import judge_answer
+from app.llm_service import generate_text
 from app.retriever import retrieve
 from app.state import GraphState
 from app.prompts.rewrite_prompt import build_rewrite_prompt
@@ -63,18 +63,12 @@ Answer:
 """.strip()
 
     start_time = time.perf_counter()
-    response = client.models.generate_content(
-        model=GENERATOR_MODEL,
-        contents=prompt,
-    )
+    answer = generate_text(prompt, model=GENERATOR_MODEL)
     latency_ms = (time.perf_counter() - start_time) * 1000
-
-    if response is None or response.text is None:
-        raise ValueError("Gemini generator returned no answer.")
 
     return {
         **state,
-        "answer": response.text,
+        "answer": answer,
         "generate_latency_ms": latency_ms,
     }
 
@@ -149,17 +143,11 @@ def rewrite_query_node(state: GraphState) -> GraphState:
         judge_reason=judge_reason,
     )
 
-    response = client.models.generate_content(
-        model=REWRITE_MODEL,
-        contents=prompt,
-    )
-
-    if response is None or response.text is None:
-        raise ValueError("Gemini rewrite returned no query.")
+    rewritten_query = generate_text(prompt, model=REWRITE_MODEL)
 
     return {
         **state,
-        "current_query": response.text.strip(),
+        "current_query": rewritten_query.strip(),
         "attempt_number": state["attempt_number"] + 1,
     }
 
@@ -192,18 +180,12 @@ Answer:
 """.strip()
 
     start_time = time.perf_counter()
-    response = client.models.generate_content(
-        model=GENERATOR_MODEL,
-        contents=prompt,
-    )
+    answer = generate_text(prompt, model=GENERATOR_MODEL)
     latency_ms = (time.perf_counter() - start_time) * 1000
-
-    if response is None or response.text is None:
-        raise ValueError("Gemini regeneration returned no answer.")
 
     return {
         **state,
-        "answer": response.text,
+        "answer": answer,
         "generate_latency_ms": latency_ms,
         "attempt_number": state["attempt_number"] + 1,
     }

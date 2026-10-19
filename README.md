@@ -31,3 +31,7 @@ Baseline and corrected evaluation report hallucination rate, False Answer Rate, 
 - **Result persistence:** Evaluation results are written to `eval/baseline_results.json`. Keep this file and its backups out of implementation checkpoint commits unless explicitly required.
 - **Validation:** The focused baseline evaluation tests passed (**14 passed**). The full test suite passed (**30 passed, 2 warnings**).
 - **Limitation:** Reusing saved results depends on the required initial retrieval and answer data being present. These results should not be interpreted as proof that every historical result can be reused.
+
+## Decisions
+
+- **Approved provider exception:** Answer generation, query rewriting, regeneration, and structured judging use the OpenAI API. Gemini remains responsible for embeddings. The locked PRD and Implementation Blueprint are unchanged.

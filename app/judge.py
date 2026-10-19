@@ -1,20 +1,10 @@
-import os
 from typing import Literal
 
-from dotenv import load_dotenv
-from google import genai
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from app.prompts.judge_prompt import build_judge_prompt
 from app.config import JUDGE_MODEL
-
-load_dotenv()
-
-API_KEY = os.getenv("GEMINI_API_KEY")
-
-client = genai.Client(
-    api_key=API_KEY
-)
+from app.llm_service import LLMServiceError, generate_structured
 
 
 class JudgeVerdict(BaseModel):
@@ -32,19 +22,12 @@ def judge_answer(query: str, context: str, answer: str) -> JudgeVerdict:
         answer=answer,
     )
 
-    response = client.models.generate_content(
-        model=JUDGE_MODEL,
-        contents=prompt,
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": JudgeVerdict,
-        },
-    )
-
-    if response is None:
-        raise ValueError("Gemini judge returned no response.")
-
-    if response.parsed is None:
-        raise ValueError("Gemini judge returned no structured verdict.")
-
-    return JudgeVerdict.model_validate(response.parsed)
+    try:
+        verdict = generate_structured(
+            prompt,
+            model=JUDGE_MODEL,
+            schema=JudgeVerdict,
+        )
+        return JudgeVerdict.model_validate(verdict)
+    except (ValidationError, LLMServiceError):
+        raise ValueError("OpenAI judge did not return a valid verdict.") from None
