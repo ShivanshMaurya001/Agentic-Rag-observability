@@ -6,7 +6,7 @@ from google import genai
 from pydantic import BaseModel, Field
 
 from app.prompts.judge_prompt import build_judge_prompt
-
+from app.config import JUDGE_MODEL
 
 load_dotenv()
 
@@ -33,7 +33,7 @@ def judge_answer(query: str, context: str, answer: str) -> JudgeVerdict:
     )
 
     response = client.models.generate_content(
-        model="gemini-3.5-flash-lite",
+        model=JUDGE_MODEL,
         contents=prompt,
         config={
             "response_mime_type": "application/json",
