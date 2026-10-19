@@ -69,6 +69,35 @@ def test_calculate_metrics():
     assert metrics["answer_correctness"] == 1.0
 
 
+def test_calculate_metrics_excludes_other_fingerprints_and_legacy_rows():
+    active = {
+        "model_fingerprint": "active",
+        "is_adversarial": False,
+        "final_outcome": "answered",
+        "answer": "supported answer",
+        "answer_correct": True,
+        "answer_correctness_score": 1.0,
+    }
+    other_provider = {
+        **active,
+        "model_fingerprint": "gemini",
+        "is_adversarial": True,
+        "final_outcome": "answered",
+        "answer_correct": False,
+    }
+    legacy = {key: value for key, value in active.items()
+              if key != "model_fingerprint"}
+
+    metrics = calculate_metrics(
+        [active, other_provider, legacy],
+        active_fingerprint="active",
+    )
+
+    assert metrics["total_queries"] == 1
+    assert metrics["false_answer_rate"] == 0.0
+    assert metrics["answer_correctness"] == 1.0
+
+
 def test_false_answer_rate_counts_answered_adversarial_queries():
     rows = [
         {
@@ -158,12 +187,41 @@ def test_run_comparison_returns_both_modes():
             "retrieved_chunk_ids": ["c1"],
         }
 
+    metadata = {
+        "baseline": {
+            "providers": {"generator": "openai"},
+            "models": {"generator": "model-a"},
+            "model_fingerprint": "baseline-fingerprint",
+        },
+        "corrected": {
+            "providers": {
+                "generator": "openai",
+                "rewrite": "openai",
+                "judge": "openai",
+            },
+            "models": {
+                "generator": "model-a",
+                "rewrite": "model-b",
+                "judge": "model-c",
+            },
+            "model_fingerprint": "corrected-fingerprint",
+        },
+    }
+
     result = run_comparison(
         run_baseline=fake_baseline,
         run_corrected=fake_corrected,
         dataset=dataset,
+        metadata_by_mode=metadata,
     )
 
     assert set(result["results"]) == {"baseline", "corrected"}
     assert len(result["results"]["baseline"]) == 1
     assert len(result["results"]["corrected"]) == 1
+
+    for mode in ("baseline", "corrected"):
+        row = result["results"][mode][0]
+        assert row["providers"] == metadata[mode]["providers"]
+        assert row["models"] == metadata[mode]["models"]
+        assert row["model_fingerprint"] == metadata[mode]["model_fingerprint"]
+        assert result["metrics"][mode]["total_queries"] == 1

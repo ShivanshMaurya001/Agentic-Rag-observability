@@ -57,8 +57,15 @@ def answer_correctness_score(
 
 def calculate_metrics(
     rows: list[dict[str, Any]],
+    active_fingerprint: str | None = None,
 ) -> dict[str, Any]:
     """Calculate M4 evaluation metrics for one evaluation mode."""
+    if active_fingerprint is not None:
+        rows = [
+            row for row in rows
+            if row.get("model_fingerprint") == active_fingerprint
+        ]
+
     if not rows:
         raise ValueError(
             "Cannot calculate metrics for an empty evaluation."
@@ -211,6 +218,7 @@ def run_comparison(
     log_run: Callable[[dict[str, Any]], None] | None = None,
     dataset: list[dict[str, Any]] | None = None,
     limit: int | None = None,
+    metadata_by_mode: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Run both supplied callables against the same evaluation items."""
     queries = list(
@@ -240,12 +248,21 @@ def run_comparison(
             row = _prepare_result(item, runner(item))
             row["mode"] = mode
             row["query"] = item["query"]
+            if metadata_by_mode is not None:
+                row.update(metadata_by_mode[mode])
             rows.append(row)
 
             if log_run is not None:
                 log_run(row)
 
         output["results"][mode] = rows
-        output["metrics"][mode] = calculate_metrics(rows)
+        fingerprint = (
+            metadata_by_mode[mode]["model_fingerprint"]
+            if metadata_by_mode is not None else None
+        )
+        output["metrics"][mode] = calculate_metrics(
+            rows,
+            active_fingerprint=fingerprint,
+        )
 
     return output

@@ -2,6 +2,9 @@
 import argparse
 import hashlib
 import json
+import os
+import shutil
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -11,9 +14,9 @@ from app.graph import graph
 from app.llm_service import generate_text
 from app.retriever import retrieve
 from app.trace_logger import log_evaluation_row
-from eval.baseline_runner import run_comparison
+from eval.baseline_runner import calculate_metrics, run_comparison
 from eval.eval_dataset import load_eval_queries
-from app.config import GENERATOR_MODEL
+from app.config import GENERATOR_MODEL, JUDGE_MODEL, REWRITE_MODEL
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,15 +24,61 @@ RESULTS_PATH = BASE_DIR / "eval" / "baseline_results.json"
 
 # Shared cache for baseline's first retrieval and generation.
 INITIAL_ATTEMPTS: dict[str, dict[str, Any]] = {}
+LLM_PROVIDER = "openai"
 
 
-def make_run_id(mode: str, query: str) -> str:
-    """Create a stable ID using the expected evaluation prefix."""
+def model_metadata(mode: str) -> dict[str, Any]:
+    """Return the providers and model IDs that define one mode's identity."""
+    role_models = {
+        "generator": GENERATOR_MODEL,
+    }
+    if mode == "corrected":
+        role_models.update({
+            "rewrite": REWRITE_MODEL,
+            "judge": JUDGE_MODEL,
+        })
+    elif mode != "baseline":
+        raise ValueError("mode must be 'baseline' or 'corrected'")
+
+    providers = {role: LLM_PROVIDER for role in role_models}
+    fingerprint_source = {
+        role: {"provider": providers[role], "model": model}
+        for role, model in role_models.items()
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            fingerprint_source,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    return {
+        "providers": providers,
+        "models": role_models,
+        "model_fingerprint": fingerprint,
+    }
+
+
+ACTIVE_METADATA = {
+    mode: model_metadata(mode)
+    for mode in ("baseline", "corrected")
+}
+
+
+def make_run_id(
+    mode: str,
+    query: str,
+    fingerprint: str | None = None,
+) -> str:
+    """Create a stable ID separated by evaluation mode and model identity."""
+    if fingerprint is None:
+        fingerprint = ACTIVE_METADATA[mode]["model_fingerprint"]
+
     query_hash = hashlib.sha256(
         query.encode("utf-8")
     ).hexdigest()[:16]
 
-    return f"eval-{mode}-{query_hash}"
+    return f"eval-{mode}-{fingerprint}-{query_hash}"
 
 
 def generate_answer(
@@ -176,6 +225,101 @@ def load_saved_results() -> dict[str, Any]:
     return saved
 
 
+def merge_result_row(
+    rows: list[dict[str, Any]],
+    row: dict[str, Any],
+) -> None:
+    """Replace only the same query under the same explicit fingerprint."""
+    fingerprint = row.get("model_fingerprint")
+    for index, existing in enumerate(rows):
+        if (
+            existing.get("query") == row["query"]
+            and existing.get("model_fingerprint") == fingerprint
+        ):
+            rows[index] = row
+            return
+    rows.append(row)
+
+
+def _create_results_backup(path: Path) -> Path:
+    """Copy existing results to a unique backup without overwriting one."""
+    index = 0
+    while True:
+        suffix = f".phase2{'.' + str(index) if index else ''}.bak"
+        backup_path = path.with_name(path.stem + suffix)
+        created = False
+        source = path.open("rb")
+        try:
+            descriptor = os.open(
+                backup_path,
+                os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+            )
+            created = True
+            with os.fdopen(descriptor, "wb") as target:
+                shutil.copyfileobj(source, target)
+            return backup_path
+        except FileExistsError:
+            index += 1
+        except Exception:
+            if created and backup_path.exists():
+                backup_path.unlink()
+            raise
+        finally:
+            source.close()
+
+
+def checkpoint_results(
+    path: Path,
+    payload: dict[str, Any],
+    backup_checked: bool = False,
+) -> tuple[bool, Path | None]:
+    """Back up once, then atomically replace the JSON checkpoint."""
+    backup_path = None
+    if not backup_checked and path.exists():
+        backup_path = _create_results_backup(path)
+    backup_checked = True
+
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+            json.dump(payload, temporary, indent=2, ensure_ascii=False)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
+
+    return backup_checked, backup_path
+
+
+def refresh_active_metrics(
+    saved: dict[str, Any],
+    metadata_by_mode: dict[str, dict[str, Any]],
+) -> None:
+    """Summarize only rows matching each mode's active fingerprint."""
+    metrics = saved.setdefault("metrics", {})
+    results = saved.setdefault("results", {})
+    for mode in ("baseline", "corrected"):
+        active_rows = [
+            row for row in results.get(mode, [])
+            if row.get("model_fingerprint")
+            == metadata_by_mode[mode]["model_fingerprint"]
+        ]
+        metrics[mode] = (
+            calculate_metrics(active_rows)
+            if active_rows else {}
+        )
+
+
 def main() -> None:
     global INITIAL_ATTEMPTS
 
@@ -205,22 +349,25 @@ def main() -> None:
     if args.limit is not None:
         dataset = dataset[:args.limit]
 
-    saved = load_saved_results() if args.resume else {
-        "results": {"baseline": [], "corrected": []},
-        "metrics": {},
-    }
+    saved = load_saved_results()
 
-    cached: dict[tuple[str, str], dict[str, Any]] = {}
+    cached: dict[tuple[str, str, str], dict[str, Any]] = {}
 
     for mode in ("baseline", "corrected"):
         for row in saved["results"].get(mode, []):
-            cached[(mode, row["query"])] = row
+            fingerprint = ACTIVE_METADATA[mode]["model_fingerprint"]
+            if args.resume and row.get("model_fingerprint") == fingerprint:
+                cached[(mode, fingerprint, row["query"])] = row
 
     # Reset the in-memory cache for this evaluation run.
     INITIAL_ATTEMPTS = {}
 
     # Restore reusable baseline attempts from saved results.
     for row in saved["results"].get("baseline", []):
+        if row.get("model_fingerprint") != ACTIVE_METADATA["baseline"]["model_fingerprint"]:
+            continue
+        if not args.resume:
+            continue
         attempts = row.get("attempts", [])
         first_attempt = attempts[0] if attempts else {}
 
@@ -247,7 +394,8 @@ def main() -> None:
 
     def cached_or_run(mode: str, actual_runner):
         def runner(item: dict[str, Any]) -> dict[str, Any]:
-            previous = cached.get((mode, item["query"]))
+            fingerprint = ACTIVE_METADATA[mode]["model_fingerprint"]
+            previous = cached.get((mode, fingerprint, item["query"]))
 
             if previous is not None:
                 return previous
@@ -258,15 +406,20 @@ def main() -> None:
 
         return runner
 
+    backup_checked = False
+
     def persist_row(row: dict[str, Any]) -> None:
+        nonlocal backup_checked
         mode = row["mode"]
         query = row["query"]
+        fingerprint = ACTIVE_METADATA[mode]["model_fingerprint"]
+        cache_key = (mode, fingerprint, query)
 
         # Saved rows have already been persisted in this evaluation flow.
-        if (mode, query) in cached:
+        if cache_key in cached:
             return
 
-        run_id = make_run_id(mode, query)
+        run_id = make_run_id(mode, query, fingerprint)
         attempts = row.get("attempts", [])
 
         # Compatibility fallback for older result shapes.
@@ -318,38 +471,31 @@ def main() -> None:
             is_adversarial=row["is_adversarial"],
         )
 
-        cached[(mode, query)] = row
+        cached[cache_key] = row
+        merge_result_row(saved["results"].setdefault(mode, []), row)
+        refresh_active_metrics(saved, ACTIVE_METADATA)
+        backup_checked, _ = checkpoint_results(
+            RESULTS_PATH,
+            saved,
+            backup_checked=backup_checked,
+        )
 
-    comparison = run_comparison(
+    run_comparison(
         run_baseline=cached_or_run("baseline", run_baseline),
         run_corrected=cached_or_run("corrected", run_corrected),
         log_run=persist_row,
         dataset=dataset,
+        metadata_by_mode=ACTIVE_METADATA,
     )
 
-    # Merge updated rows without discarding saved queries outside --limit.
-    saved_rows: dict[str, list[dict[str, Any]]] = {}
+    refresh_active_metrics(saved, ACTIVE_METADATA)
+    backup_checked, _ = checkpoint_results(
+        RESULTS_PATH,
+        saved,
+        backup_checked=backup_checked,
+    )
 
-    for mode in ("baseline", "corrected"):
-        merged = {
-            row["query"]: row
-            for row in saved["results"].get(mode, [])
-        }
-
-        for row in comparison["results"][mode]:
-            merged[row["query"]] = row
-
-        saved_rows[mode] = list(merged.values())
-
-    output = {
-        "results": saved_rows,
-        "metrics": comparison["metrics"],
-    }
-
-    with RESULTS_PATH.open("w", encoding="utf-8") as file:
-        json.dump(output, file, indent=2, ensure_ascii=False)
-
-    print(json.dumps(output["metrics"], indent=2))
+    print(json.dumps(saved["metrics"], indent=2))
     print(f"Saved evaluation results to: {RESULTS_PATH}")
 
 
