@@ -14,11 +14,10 @@ def test_make_run_id_is_stable():
 
 
 def test_load_saved_results_when_file_missing(tmp_path, monkeypatch):
+    import scripts.run_baseline_eval as evaluation
+
     results_path = tmp_path / "baseline_results.json"
-    monkeypatch.setattr(
-        "scripts.run_baseline_eval.RESULTS_PATH",
-        results_path,
-    )
+    monkeypatch.setattr(evaluation, "RESULTS_PATH", results_path)
 
     result = load_saved_results()
 
@@ -29,30 +28,28 @@ def test_load_saved_results_when_file_missing(tmp_path, monkeypatch):
 
 
 def test_load_saved_results_reads_json(tmp_path, monkeypatch):
+    import scripts.run_baseline_eval as evaluation
+
     results_path = tmp_path / "baseline_results.json"
     expected = {
         "results": {"baseline": [{"query": "q1"}], "corrected": []},
         "metrics": {},
     }
     results_path.write_text(json.dumps(expected), encoding="utf-8")
-    monkeypatch.setattr(
-        "scripts.run_baseline_eval.RESULTS_PATH",
-        results_path,
-    )
+    monkeypatch.setattr(evaluation, "RESULTS_PATH", results_path)
 
     assert load_saved_results() == expected
 
 
 def test_load_saved_results_fills_missing_sections(tmp_path, monkeypatch):
+    import scripts.run_baseline_eval as evaluation
+
     results_path = tmp_path / "baseline_results.json"
     results_path.write_text(
         json.dumps({"results": {"baseline": [{"query": "q1"}]}}),
         encoding="utf-8",
     )
-    monkeypatch.setattr(
-        "scripts.run_baseline_eval.RESULTS_PATH",
-        results_path,
-    )
+    monkeypatch.setattr(evaluation, "RESULTS_PATH", results_path)
 
     result = load_saved_results()
 
@@ -64,6 +61,8 @@ def test_load_saved_results_fills_missing_sections(tmp_path, monkeypatch):
 def test_saved_results_can_be_reused_by_query_and_mode(
     tmp_path, monkeypatch
 ):
+    import scripts.run_baseline_eval as evaluation
+
     results_path = tmp_path / "baseline_results.json"
     saved_row = {
         "query": "What is retrieval?",
@@ -85,10 +84,7 @@ def test_saved_results_can_be_reused_by_query_and_mode(
         ),
         encoding="utf-8",
     )
-    monkeypatch.setattr(
-        "scripts.run_baseline_eval.RESULTS_PATH",
-        results_path,
-    )
+    monkeypatch.setattr(evaluation, "RESULTS_PATH", results_path)
 
     saved = load_saved_results()
     cached = {
@@ -104,8 +100,10 @@ def test_saved_results_can_be_reused_by_query_and_mode(
             previous = cached.get((mode, item["query"]))
             if previous is not None:
                 return previous
+
             runner_calls.append((mode, item["query"]))
             return actual_runner(item)
+
         return runner
 
     runner = cached_or_run(
@@ -124,6 +122,7 @@ def test_main_resume_reuses_saved_pair_and_runs_missing_pairs(
     import scripts.run_baseline_eval as evaluation
 
     results_path = tmp_path / "baseline_results.json"
+
     saved_query = {
         "query": "Saved query",
         "is_adversarial": False,
@@ -204,20 +203,15 @@ def test_main_resume_reuses_saved_pair_and_runs_missing_pairs(
     monkeypatch.setattr(evaluation, "run_baseline", fake_baseline)
     monkeypatch.setattr(evaluation, "run_corrected", fake_corrected)
 
-    # Mock persistence to keep the real SQLite database untouched.
+    # Prevent writes to the real SQLite database.
     logged_rows = []
     monkeypatch.setattr(
         evaluation,
-        "log_attempt",
-        lambda **kwargs: None,
-    )
-    monkeypatch.setattr(
-        evaluation,
-        "log_run",
+        "log_evaluation_row",
         lambda **kwargs: None,
     )
 
-    # Capture rows handed to the persistence callback by the comparison.
+    # Capture rows passed to the persistence callback.
     original_run_comparison = evaluation.run_comparison
 
     def fake_run_comparison(
@@ -246,14 +240,22 @@ def test_main_resume_reuses_saved_pair_and_runs_missing_pairs(
         fake_run_comparison,
     )
 
-    monkeypatch.setattr(sys, "argv", ["run_baseline_eval.py", "--resume"])
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["run_baseline_eval.py", "--resume"],
+    )
     evaluation.main()
 
-    # Saved baseline pair is reused; only its missing corrected pair runs.
+    # Saved baseline is reused; missing baseline runs once.
     assert baseline_calls == ["Missing query"]
+
+    # Corrected results are missing for both queries.
     assert corrected_calls == ["Saved query", "Missing query"]
 
-    saved_output = json.loads(results_path.read_text(encoding="utf-8"))
+    saved_output = json.loads(
+        results_path.read_text(encoding="utf-8")
+    )
     baseline_queries = {
         row["query"] for row in saved_output["results"]["baseline"]
     }
@@ -263,3 +265,6 @@ def test_main_resume_reuses_saved_pair_and_runs_missing_pairs(
 
     assert baseline_queries == {"Saved query", "Missing query"}
     assert corrected_queries == {"Saved query", "Missing query"}
+
+    # Only the missing result pairs should be persisted.
+    assert len(logged_rows) == 4

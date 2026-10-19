@@ -60,7 +60,7 @@
         "query": "What is a large language model?"
       },
       {
-        "answer": "Based on the provided document, modern LLMs are built on the **Transformer architecture**, which was introduced in the 2017 paper **'Attention Is All You Need'**.",
+        "answer": "Modern LLMs are built on the Transformer architecture, which was introduced in the 2017 paper 'Attention Is All You Need'.",
         "final_outcome": "answered",
         "total_attempts": 1,
         "retrieved_chunks": [
@@ -107,6 +107,54 @@
           "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
           "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2"
         ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "Which architecture do modern LLMs use, and which paper introduced it?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+                "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5108174681663513
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+                "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.5705932974815369
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.6268312931060791
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+                "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 2,
+                "score": 0.6322818994522095
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+                "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.6524678468704224
+              }
+            ],
+            "generated_answer": "Modern LLMs are built on the Transformer architecture, which was introduced in the 2017 paper 'Attention Is All You Need'.",
+            "judge_verdict": {},
+            "retrieve_latency_ms": 979.1993999388069,
+            "generate_latency_ms": 28004.609000170603,
+            "judge_latency_ms": 0.0
+          }
+        ],
         "is_hallucination": null,
         "is_adversarial": false,
         "relevant_chunks": [
@@ -118,7 +166,7 @@
         "query": "Which architecture do modern LLMs use, and which paper introduced it?"
       },
       {
-        "answer": "Based on the provided document, Byte Pair Encoding (BPE) is a tokenization algorithm that breaks text into frequently occurring chunks, which can be whole words, parts of words, or individual characters for rare terms.",
+        "answer": "Based on the provided document, Byte Pair Encoding (BPE) breaks text into frequently occurring chunks, which may be whole words, parts of words, or even individual characters for rare terms.",
         "final_outcome": "answered",
         "total_attempts": 1,
         "retrieved_chunks": [
@@ -165,15 +213,276 @@
           "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
           "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1"
         ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What does Byte Pair Encoding do?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.7158512473106384
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+                "text": "Tokenization and Text Preprocessing\nFrom raw documents to model-ready text\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. What Tokenization Does\nTokenization converts text into units a model can process. A tokenizer may split a word into one token or several\nsubword pieces. For example, an uncommon technical term might be represented by multiple fragments rather\nthan a single token. Token IDs are vocabulary indices, not semantic scores. The embedding layer later maps these\nIDs to vectors.\n2. Why Subword Tokenization Is Useful\nA vocabulary containing every possible word would be huge and would struggle with new names, spelling\nvariations, and technical terms. Subword methods balance vocabulary size with coverage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 1,
+                "score": 0.7577692866325378
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+                "text": "overage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This is especially useful for scientific writing,\ncode, product names, and multilingual text. Different model families use different tokenization algorithms and\nvocabularies, so token counts can differ for the same passage.\n3. Characters, Words, Tokens, and Chunks\nCharacters, words, model tokens, and retrieval chunks are different units. A 1,000-character passage is not\nnecessarily a fixed number of tokens. A chunk is a segment selected by an application for storage and retrieval; it\nmay be defined by characters, tokens, sentences, or document structure. When comparing chunking strategies,\nrecord the actual method and parameters rather than assuming that a character limit corresponds to a universal\ntoken count.\n4. Preprocessing PDF Text\nPDF extraction can introduce broken line endings, repeated headers, page numbers, hyphenated words, or\nreading-order problems. A preprocessing pipeline shoul",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 1,
+                "score": 0.8006550669670105
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+                "text": "Key Takeaways\nTokenization is a model-specific conversion from text to token IDs. It is distinct from PDF extraction, text cleaning,\nand retrieval chunking. Reliable preprocessing preserves meaning, provenance, and document structure while\nremoving accidental noise.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 2,
+                "score": 0.8137083053588867
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+                "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.8217539191246033
+              }
+            ],
+            "generated_answer": "Based on the provided document, Byte Pair Encoding (BPE) breaks text into frequently occurring chunks, which may be whole words, parts of words, or even individual characters for rare terms.",
+            "judge_verdict": {},
+            "retrieve_latency_ms": 491.50849995203316,
+            "generate_latency_ms": 874.3888000026345,
+            "judge_latency_ms": 0.0
+          }
+        ],
         "is_hallucination": null,
         "is_adversarial": false,
         "relevant_chunks": [
           "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
         ],
-        "answer_correctness_score": 0.8333333333333334,
+        "answer_correctness_score": 0.8888888888888888,
         "answer_correct": true,
         "mode": "baseline",
         "query": "What does Byte Pair Encoding do?"
+      },
+      {
+        "answer": "Based on the provided document, the self-attention mechanism uses Query, Key, and Value vectors (which are learned projections) to compute a weighted combination of all other tokens in the input for each token. \n\nSpecifically:\n- **Queries** represent what a token is looking for.\n- **Keys** represent what other tokens offer for matching.\n- **Values** carry the information that can be combined.\n\nSimilarity scores between queries and keys are scaled and normalized with softmax, and these normalized weights are used to compute a weighted combination of values. This allows the model to determine which parts of the input are most relevant to understanding or generating each token.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+            "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.46298107504844666
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+            "text": "y, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant to understanding or generating\neach token.\nTransformers use multiple attention heads in parallel, a technique called multi-head attention,\nallowing the model to attend to different types of relationships simultaneously, such as syntactic\nstructure in one head and long-range topical relevance in another.\n4. Training Process",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5398945808410645
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+            "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.54363614320755
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+            "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.552125871181488
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5728070139884949
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+        ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What are Query, Key, and Value vectors used for in self-attention?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+                "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.46298107504844666
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+                "text": "y, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant to understanding or generating\neach token.\nTransformers use multiple attention heads in parallel, a technique called multi-head attention,\nallowing the model to attend to different types of relationships simultaneously, such as syntactic\nstructure in one head and long-range topical relevance in another.\n4. Training Process",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5398945808410645
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+                "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.54363614320755
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+                "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.552125871181488
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5728070139884949
+              }
+            ],
+            "generated_answer": "Based on the provided document, the self-attention mechanism uses Query, Key, and Value vectors (which are learned projections) to compute a weighted combination of all other tokens in the input for each token. \n\nSpecifically:\n- **Queries** represent what a token is looking for.\n- **Keys** represent what other tokens offer for matching.\n- **Values** carry the information that can be combined.\n\nSimilarity scores between queries and keys are scaled and normalized with softmax, and these normalized weights are used to compute a weighted combination of values. This allows the model to determine which parts of the input are most relevant to understanding or generating each token.",
+            "judge_verdict": {},
+            "retrieve_latency_ms": 651.2416999321431,
+            "generate_latency_ms": 1499.6976999100298,
+            "judge_latency_ms": 0.0
+          }
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+        ],
+        "answer_correctness_score": 0.9333333333333333,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "What are Query, Key, and Value vectors used for in self-attention?"
+      },
+      {
+        "answer": "Based on the provided document, the purpose of Reinforcement Learning from Human Feedback (RLHF) is to further align model outputs with what humans consider helpful, honest, and harmless.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6870985627174377
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+            "text": " existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain, follow a task format, or adapt to examples. Full fine-tuning updates many or all model\nparameters; parameter-efficient approaches update a smaller set of parameters or adapter modules. Fine-tuning\nrequires high-quality examples and evaluation. Poor data can cause overfitting, narrow behavior, or regression on\npreviously learned capabilities.\n3. Instruction Tuning\nInstruction tuning uses examples that pair instructions with desired responses. It aims to make a model more\nhelpful at following user requests and producing expected formats. It is a form of supervised fine-tuning, though\ndeployed systems may involve additional preference optimization or safety training. Instruction tuning does not\nguarantee that the model will obey every instruction or always distinguish evidence from speculation.\n4. Fine-Tuning Versus RAG\nFine-tuning changes model parameters; retrieval-augmented generation (",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.7321220636367798
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.7386888265609741
+          },
+          {
+            "chunk_id": "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+            "text": "akes external information available at inference time without updating the model’s parameters. Fine-tuning\nchanges model behavior through additional training. RAG is often a better first choice for a document-search\nassistant because sources can be updated by re-ingesting documents. Fine-tuning may be useful for specialized\nresponse formats or repeated behaviors, but it is not a substitute for retrieving up-to-date source material.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 1",
+            "doc_name": "07_retrieval_augmented_generation_rag.pdf",
+            "page": 1,
+            "score": 0.7737842202186584
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4",
+            "text": "6. Choosing a Strategy\nUse prompting when a task can be handled through clear instructions and examples. Use RAG when the answer\ndepends on a searchable knowledge base or source traceability. Consider fine-tuning when there is a repeated\nbehavior or domain pattern that prompting and retrieval do not adequately address, and when a suitable training\nset and evaluation budget exist. Decisions should be based on measured failure modes, not on the assumption\nthat more training always improves results.\nKey Takeaways\nPretraining builds broad language capabilities, fine-tuning adapts behavior, and instruction tuning emphasizes\nfollowing instructions. RAG supplies external evidence at inference time and is particularly useful for\ndocument-grounded question answering.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 2,
+            "score": 0.778898298740387
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+          "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4"
+        ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What is the purpose of reinforcement learning from human feedback?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+                "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 2,
+                "score": 0.6870985627174377
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+                "text": " existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain, follow a task format, or adapt to examples. Full fine-tuning updates many or all model\nparameters; parameter-efficient approaches update a smaller set of parameters or adapter modules. Fine-tuning\nrequires high-quality examples and evaluation. Poor data can cause overfitting, narrow behavior, or regression on\npreviously learned capabilities.\n3. Instruction Tuning\nInstruction tuning uses examples that pair instructions with desired responses. It aims to make a model more\nhelpful at following user requests and producing expected formats. It is a form of supervised fine-tuning, though\ndeployed systems may involve additional preference optimization or safety training. Instruction tuning does not\nguarantee that the model will obey every instruction or always distinguish evidence from speculation.\n4. Fine-Tuning Versus RAG\nFine-tuning changes model parameters; retrieval-augmented generation (",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 1,
+                "score": 0.7321220636367798
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+                "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 1,
+                "score": 0.7386888265609741
+              },
+              {
+                "chunk_id": "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+                "text": "akes external information available at inference time without updating the model’s parameters. Fine-tuning\nchanges model behavior through additional training. RAG is often a better first choice for a document-search\nassistant because sources can be updated by re-ingesting documents. Fine-tuning may be useful for specialized\nresponse formats or repeated behaviors, but it is not a substitute for retrieving up-to-date source material.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 1",
+                "doc_name": "07_retrieval_augmented_generation_rag.pdf",
+                "page": 1,
+                "score": 0.7737842202186584
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4",
+                "text": "6. Choosing a Strategy\nUse prompting when a task can be handled through clear instructions and examples. Use RAG when the answer\ndepends on a searchable knowledge base or source traceability. Consider fine-tuning when there is a repeated\nbehavior or domain pattern that prompting and retrieval do not adequately address, and when a suitable training\nset and evaluation budget exist. Decisions should be based on measured failure modes, not on the assumption\nthat more training always improves results.\nKey Takeaways\nPretraining builds broad language capabilities, fine-tuning adapts behavior, and instruction tuning emphasizes\nfollowing instructions. RAG supplies external evidence at inference time and is particularly useful for\ndocument-grounded question answering.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 2,
+                "score": 0.778898298740387
+              }
+            ],
+            "generated_answer": "Based on the provided document, the purpose of Reinforcement Learning from Human Feedback (RLHF) is to further align model outputs with what humans consider helpful, honest, and harmless.",
+            "judge_verdict": {},
+            "retrieve_latency_ms": 484.2890000436455,
+            "generate_latency_ms": 1455.1742000039667,
+            "judge_latency_ms": 0.0
+          }
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+        ],
+        "answer_correctness_score": 0.8,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "What is the purpose of reinforcement learning from human feedback?"
       }
     ],
     "corrected": [
@@ -236,7 +545,7 @@
         "query": "What is a large language model?"
       },
       {
-        "answer": "Based on the provided document, modern LLMs are built on the **Transformer architecture**, which was introduced in the 2017 paper **'Attention Is All You Need'**.",
+        "answer": "Modern LLMs are built on the Transformer architecture, which was introduced in the 2017 paper 'Attention Is All You Need'.",
         "final_outcome": "answered",
         "total_attempts": 1,
         "retrieved_chunks": [
@@ -283,6 +592,60 @@
           "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
           "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2"
         ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "Which architecture do modern LLMs use, and which paper introduced it?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+                "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5108174681663513
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+                "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.5705932974815369
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.6268312931060791
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+                "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 2,
+                "score": 0.6322818994522095
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+                "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.6524678468704224
+              }
+            ],
+            "generated_answer": "Modern LLMs are built on the Transformer architecture, which was introduced in the 2017 paper 'Attention Is All You Need'.",
+            "judge_verdict": {
+              "grounded": true,
+              "retrieval_quality": 1.0,
+              "answer_quality": 1.0,
+              "failure_type": "none",
+              "reason": "The answer accurately states that modern LLMs use the Transformer architecture and were introduced in the paper 'Attention Is All You Need', both of which are directly supported by the provided text."
+            },
+            "retrieve_latency_ms": 979.1993999388069,
+            "generate_latency_ms": 28004.609000170603,
+            "judge_latency_ms": 7326.451599830762
+          }
+        ],
         "is_hallucination": null,
         "is_adversarial": false,
         "relevant_chunks": [
@@ -294,7 +657,7 @@
         "query": "Which architecture do modern LLMs use, and which paper introduced it?"
       },
       {
-        "answer": "Based on the provided document, Byte Pair Encoding (BPE) is a tokenization algorithm that breaks text into frequently occurring chunks. These chunks may be whole words, parts of words, or individual characters for rare terms.",
+        "answer": "Based on the provided document, Byte Pair Encoding (BPE) breaks text into frequently occurring chunks, which may be whole words, parts of words, or even individual characters for rare terms.",
         "final_outcome": "answered",
         "total_attempts": 1,
         "retrieved_chunks": [
@@ -341,42 +704,323 @@
           "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
           "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1"
         ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What does Byte Pair Encoding do?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.7158512473106384
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_0",
+                "text": "Tokenization and Text Preprocessing\nFrom raw documents to model-ready text\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. What Tokenization Does\nTokenization converts text into units a model can process. A tokenizer may split a word into one token or several\nsubword pieces. For example, an uncommon technical term might be represented by multiple fragments rather\nthan a single token. Token IDs are vocabulary indices, not semantic scores. The embedding layer later maps these\nIDs to vectors.\n2. Why Subword Tokenization Is Useful\nA vocabulary containing every possible word would be huge and would struggle with new names, spelling\nvariations, and technical terms. Subword methods balance vocabulary size with coverage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 1,
+                "score": 0.7577692866325378
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_1",
+                "text": "overage. Common strings can\nremain intact while rare words are decomposed into reusable pieces. This is especially useful for scientific writing,\ncode, product names, and multilingual text. Different model families use different tokenization algorithms and\nvocabularies, so token counts can differ for the same passage.\n3. Characters, Words, Tokens, and Chunks\nCharacters, words, model tokens, and retrieval chunks are different units. A 1,000-character passage is not\nnecessarily a fixed number of tokens. A chunk is a segment selected by an application for storage and retrieval; it\nmay be defined by characters, tokens, sentences, or document structure. When comparing chunking strategies,\nrecord the actual method and parameters rather than assuming that a character limit corresponds to a universal\ntoken count.\n4. Preprocessing PDF Text\nPDF extraction can introduce broken line endings, repeated headers, page numbers, hyphenated words, or\nreading-order problems. A preprocessing pipeline shoul",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 1,
+                "score": 0.8006550669670105
+              },
+              {
+                "chunk_id": "09678f7f4f54a243b091cb308e8b149941adf1197e751356663a132221d99f0b_4",
+                "text": "Key Takeaways\nTokenization is a model-specific conversion from text to token IDs. It is distinct from PDF extraction, text cleaning,\nand retrieval chunking. Reliable preprocessing preserves meaning, provenance, and document structure while\nremoving accidental noise.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+                "doc_name": "02_tokenization_and_text_preprocessing.pdf",
+                "page": 2,
+                "score": 0.8137083053588867
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+                "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.8217539191246033
+              }
+            ],
+            "generated_answer": "Based on the provided document, Byte Pair Encoding (BPE) breaks text into frequently occurring chunks, which may be whole words, parts of words, or even individual characters for rare terms.",
+            "judge_verdict": {
+              "grounded": true,
+              "retrieval_quality": 1.0,
+              "answer_quality": 1.0,
+              "failure_type": "none",
+              "reason": "The answer accurately describes what Byte Pair Encoding (BPE) does using information directly retrieved from the provided context."
+            },
+            "retrieve_latency_ms": 491.50849995203316,
+            "generate_latency_ms": 874.3888000026345,
+            "judge_latency_ms": 6267.0158999972045
+          }
+        ],
         "is_hallucination": null,
         "is_adversarial": false,
         "relevant_chunks": [
           "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
         ],
-        "answer_correctness_score": 0.8333333333333334,
+        "answer_correctness_score": 0.8888888888888888,
         "answer_correct": true,
         "mode": "corrected",
         "query": "What does Byte Pair Encoding do?"
+      },
+      {
+        "answer": "Based on the provided document, the self-attention mechanism uses Query, Key, and Value vectors (which are learned projections) to compute a weighted combination of all other tokens in the input for each token. \n\nSpecifically:\n- **Queries** represent what a token is looking for.\n- **Keys** represent what other tokens offer for matching.\n- **Values** carry the information that can be combined.\n\nSimilarity scores between queries and keys are scaled and normalized with softmax, and these normalized weights are used to compute a weighted combination of values. This allows the model to determine which parts of the input are most relevant to understanding or generating each token.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+            "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.46298107504844666
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+            "text": "y, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant to understanding or generating\neach token.\nTransformers use multiple attention heads in parallel, a technique called multi-head attention,\nallowing the model to attend to different types of relationships simultaneously, such as syntactic\nstructure in one head and long-range topical relevance in another.\n4. Training Process",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5398945808410645
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+            "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.54363614320755
+          },
+          {
+            "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+            "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+            "doc_name": "01_transformers_and_self_attention.pdf",
+            "page": 1,
+            "score": 0.552125871181488
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+            "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.5728070139884949
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+          "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1"
+        ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What are Query, Key, and Value vectors used for in self-attention?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_1",
+                "text": "ions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, or another text unit.\nEach token ID is mapped to a vector called an embedding. Since attention alone does not inherently encode token\norder, positional information is added to the token representations. The resulting vectors carry both lexical\ninformation and a signal about where each token appears in the sequence.\n3. The Self-Attention Operation\nSelf-attention creates query, key, and value vectors from each token representation. A query represents what a\ntoken is looking for; keys represent what other tokens offer for matching; values carry the information that can be\ncombined. Similarity scores between queries and keys are scaled and normalized with softmax. The normalized\nweights are used to compute a weighted combination of values. In simplified notation, Attention(Q,K,V) =\nsoftmax(QKn / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.46298107504844666
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2",
+                "text": "y, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant to understanding or generating\neach token.\nTransformers use multiple attention heads in parallel, a technique called multi-head attention,\nallowing the model to attend to different types of relationships simultaneously, such as syntactic\nstructure in one head and long-range topical relevance in another.\n4. Training Process",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5398945808410645
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_2",
+                "text": " / (cid:214)dn)V. The scaling term helps keep scores in a useful range as the key dimension grows.\n4. Multi-Head Attention and Layers\nMulti-head attention runs several attention operations in parallel. Different heads can learn different relationships,\nsuch as local syntax, coreference, or broader semantic associations. Their outputs are combined and projected.\nTransformer blocks typically also include feed-forward layers, residual connections, and layer normalization.\nStacking blocks allows representations to become progressively more contextual. The exact architecture differs\nbetween encoder-only, decoder-only, and encoder–decoder models.\n5. A Small Example\nConsider “A student opened the notebook because the lecture had started.” To interpret “the lecture,” the model\ncan attend to “started”; to interpret “the notebook,” it can attend to “opened” and “student.” These are illustrative\nrelationships, not guaranteed interpretations of particular attention heads. Attention weights are use",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.54363614320755
+              },
+              {
+                "chunk_id": "c10b885bcf42608c55c96e189497d7e0fc60d6aecd737aec4b31a8fcebee3b0f_0",
+                "text": "Transformers and Self-Attention\nCore concepts behind modern language models\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Why Transformers Matter\nA language model needs to interpret relationships between words and tokens. In the sentence “The animal did not\ncross the road because it was tired,” the word “it” refers to the animal. A useful model must combine information\nfrom different parts of the sequence. Earlier neural architectures often processed tokens sequentially, while the\nTransformer architecture uses attention to relate tokens directly to one another. This makes parallel processing\nduring training practical and helps the model represent long-range dependencies.\n2. Tokens, Embeddings, and Positions\nText is first converted into tokens. A token may be a whole word, part of a word, punctuation, ",
+                "doc_name": "01_transformers_and_self_attention.pdf",
+                "page": 1,
+                "score": 0.552125871181488
+              },
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+                "text": "ed into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such as Byte Pair Encoding (BPE) break\ntext into frequently occurring chunks, which may be whole words, parts of words, or even individual\ncharacters for rare terms.\nThis subword approach allows the model to handle a fixed-size vocabulary while still representing\nrare or unseen words by combining smaller known subword units, avoiding the need for an infinitely\nlarge vocabulary.\n3. Embeddings and Self-Attention\nEach token is converted into a dense numerical vector called an embedding, which captures\nsemantic meaning in a high-dimensional space. Words with similar meanings tend to have\nembeddings that are close together in this space.\nThe self-attention mechanism then computes, for each token, a weighted combination of all other\ntokens in the input, using three learned projections called Query, Key, and Value vectors. This allows\nthe model to determine which parts of the input are most relevant ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 1,
+                "score": 0.5728070139884949
+              }
+            ],
+            "generated_answer": "Based on the provided document, the self-attention mechanism uses Query, Key, and Value vectors (which are learned projections) to compute a weighted combination of all other tokens in the input for each token. \n\nSpecifically:\n- **Queries** represent what a token is looking for.\n- **Keys** represent what other tokens offer for matching.\n- **Values** carry the information that can be combined.\n\nSimilarity scores between queries and keys are scaled and normalized with softmax, and these normalized weights are used to compute a weighted combination of values. This allows the model to determine which parts of the input are most relevant to understanding or generating each token.",
+            "judge_verdict": {
+              "grounded": true,
+              "retrieval_quality": 1.0,
+              "answer_quality": 1.0,
+              "failure_type": "none",
+              "reason": "The retrieved context contains all necessary details regarding Query, Key, and Value vectors, and the generated answer accurately and comprehensively summarizes these points using only the provided context."
+            },
+            "retrieve_latency_ms": 651.2416999321431,
+            "generate_latency_ms": 1499.6976999100298,
+            "judge_latency_ms": 1622.82170006074
+          }
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_1",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_2"
+        ],
+        "answer_correctness_score": 0.9333333333333333,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "What are Query, Key, and Value vectors used for in self-attention?"
+      },
+      {
+        "answer": "Based on the provided document, the purpose of Reinforcement Learning from Human Feedback (RLHF) is to further align model outputs with what humans consider helpful, honest, and harmless.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6870985627174377
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+            "text": " existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain, follow a task format, or adapt to examples. Full fine-tuning updates many or all model\nparameters; parameter-efficient approaches update a smaller set of parameters or adapter modules. Fine-tuning\nrequires high-quality examples and evaluation. Poor data can cause overfitting, narrow behavior, or regression on\npreviously learned capabilities.\n3. Instruction Tuning\nInstruction tuning uses examples that pair instructions with desired responses. It aims to make a model more\nhelpful at following user requests and producing expected formats. It is a form of supervised fine-tuning, though\ndeployed systems may involve additional preference optimization or safety training. Instruction tuning does not\nguarantee that the model will obey every instruction or always distinguish evidence from speculation.\n4. Fine-Tuning Versus RAG\nFine-tuning changes model parameters; retrieval-augmented generation (",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.7321220636367798
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.7386888265609741
+          },
+          {
+            "chunk_id": "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+            "text": "akes external information available at inference time without updating the model’s parameters. Fine-tuning\nchanges model behavior through additional training. RAG is often a better first choice for a document-search\nassistant because sources can be updated by re-ingesting documents. Fine-tuning may be useful for specialized\nresponse formats or repeated behaviors, but it is not a substitute for retrieving up-to-date source material.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 1",
+            "doc_name": "07_retrieval_augmented_generation_rag.pdf",
+            "page": 1,
+            "score": 0.7737842202186584
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4",
+            "text": "6. Choosing a Strategy\nUse prompting when a task can be handled through clear instructions and examples. Use RAG when the answer\ndepends on a searchable knowledge base or source traceability. Consider fine-tuning when there is a repeated\nbehavior or domain pattern that prompting and retrieval do not adequately address, and when a suitable training\nset and evaluation budget exist. Decisions should be based on measured failure modes, not on the assumption\nthat more training always improves results.\nKey Takeaways\nPretraining builds broad language capabilities, fine-tuning adapts behavior, and instruction tuning emphasizes\nfollowing instructions. RAG supplies external evidence at inference time and is particularly useful for\ndocument-grounded question answering.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 2,
+            "score": 0.778898298740387
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+          "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4"
+        ],
+        "attempts": [
+          {
+            "attempt_number": 0,
+            "query_used": "What is the purpose of reinforcement learning from human feedback?",
+            "retrieved_chunks": [
+              {
+                "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+                "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+                "doc_name": "how_llms_work.pdf",
+                "page": 2,
+                "score": 0.6870985627174377
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_1",
+                "text": " existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain, follow a task format, or adapt to examples. Full fine-tuning updates many or all model\nparameters; parameter-efficient approaches update a smaller set of parameters or adapter modules. Fine-tuning\nrequires high-quality examples and evaluation. Poor data can cause overfitting, narrow behavior, or regression on\npreviously learned capabilities.\n3. Instruction Tuning\nInstruction tuning uses examples that pair instructions with desired responses. It aims to make a model more\nhelpful at following user requests and producing expected formats. It is a form of supervised fine-tuning, though\ndeployed systems may involve additional preference optimization or safety training. Instruction tuning does not\nguarantee that the model will obey every instruction or always distinguish evidence from speculation.\n4. Fine-Tuning Versus RAG\nFine-tuning changes model parameters; retrieval-augmented generation (",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 1,
+                "score": 0.7321220636367798
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+                "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 1,
+                "score": 0.7386888265609741
+              },
+              {
+                "chunk_id": "518c27d30fffe68af71eeca91ba2640badd409024488148c4f0b3a39f4528890_3",
+                "text": "akes external information available at inference time without updating the model’s parameters. Fine-tuning\nchanges model behavior through additional training. RAG is often a better first choice for a document-search\nassistant because sources can be updated by re-ingesting documents. Fine-tuning may be useful for specialized\nresponse formats or repeated behaviors, but it is not a substitute for retrieving up-to-date source material.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 1",
+                "doc_name": "07_retrieval_augmented_generation_rag.pdf",
+                "page": 1,
+                "score": 0.7737842202186584
+              },
+              {
+                "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_4",
+                "text": "6. Choosing a Strategy\nUse prompting when a task can be handled through clear instructions and examples. Use RAG when the answer\ndepends on a searchable knowledge base or source traceability. Consider fine-tuning when there is a repeated\nbehavior or domain pattern that prompting and retrieval do not adequately address, and when a suitable training\nset and evaluation budget exist. Decisions should be based on measured failure modes, not on the assumption\nthat more training always improves results.\nKey Takeaways\nPretraining builds broad language capabilities, fine-tuning adapts behavior, and instruction tuning emphasizes\nfollowing instructions. RAG supplies external evidence at inference time and is particularly useful for\ndocument-grounded question answering.\nEnd of document (cid:127) Use source passages as evidence and verify claims during evaluation.\nSemantic Context Retrieval Engine (cid:127) Learning corpus Page 2",
+                "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+                "page": 2,
+                "score": 0.778898298740387
+              }
+            ],
+            "generated_answer": "Based on the provided document, the purpose of Reinforcement Learning from Human Feedback (RLHF) is to further align model outputs with what humans consider helpful, honest, and harmless.",
+            "judge_verdict": {
+              "grounded": true,
+              "retrieval_quality": 1.0,
+              "answer_quality": 1.0,
+              "failure_type": "none",
+              "reason": "The retrieved context explicitly states the purpose of RLHF, and the generated answer accurately reflects this information without any unsupported claims."
+            },
+            "retrieve_latency_ms": 484.2890000436455,
+            "generate_latency_ms": 1455.1742000039667,
+            "judge_latency_ms": 2119.53579983674
+          }
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3"
+        ],
+        "answer_correctness_score": 0.8,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "What is the purpose of reinforcement learning from human feedback?"
       }
     ]
   },
   "metrics": {
     "baseline": {
-      "total_queries": 3,
-      "hallucination_rate": 0.0,
+      "total_queries": 5,
+      "hallucination_rate": null,
+      "hallucination_rate_status": "not measured",
       "false_answer_rate": 0.0,
       "correct_abstention_rate": 0.0,
       "abstention_rate": 0.0,
       "recall_at_k": 1.0,
       "hit_rate_at_k": 1.0,
       "answer_correctness": 1.0,
-      "mean_answer_correctness_score": 0.9166666666666666,
+      "mean_answer_correctness_score": 0.9077777777777778,
       "retry_success_rate": 0.0,
       "average_retries": 0.0
     },
     "corrected": {
-      "total_queries": 3,
-      "hallucination_rate": 0.0,
+      "total_queries": 5,
+      "hallucination_rate": null,
+      "hallucination_rate_status": "not measured",
       "false_answer_rate": 0.0,
       "correct_abstention_rate": 0.0,
       "abstention_rate": 0.0,
       "recall_at_k": 1.0,
       "hit_rate_at_k": 1.0,
       "answer_correctness": 1.0,
-      "mean_answer_correctness_score": 0.9166666666666666,
+      "mean_answer_correctness_score": 0.9077777777777778,
       "retry_success_rate": 0.0,
       "average_retries": 0.0
     }

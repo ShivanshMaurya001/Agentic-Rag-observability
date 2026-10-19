@@ -1,0 +1,154 @@
+{
+  "results": {
+    "baseline": [
+      {
+        "answer": "Based on the document, a Large Language Model (LLM) is a type of neural network trained on massive amounts of text data to predict the next word, or more precisely the next token, in a sequence.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.45859843492507935
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.5605995059013367
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+            "text": "al parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum number of tokens they\ncan process in a single request, and their knowledge is limited to what was present in their training\ndata up to a specific cutoff date.",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6231819987297058
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+            "text": " at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the next token, and a sampling strategy, such as greedy\ndecoding, top-k sampling, or nucleus (top-p) sampling, is used to select the next token.\nParameters like temperature control the randomness of this selection: lower temperature values\nmake the output more deterministic and focused, while higher values increase diversity and creativity\nat the cost of coherence.\n6. Limitations\nLLMs are known to hallucinate, meaning they can generate plausible-sounding but factually incorrect\ninformation, since their knowledge is derived from statistical patterns rather than a verified, structured\ndatabase of facts. This is a key motivation behind Retrieval-Augmented Generation (RAG) systems,\nwhich ground model outputs in retrieved, verifiable source documents rather than relying solely on the\nmodel's internal parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6338602900505066
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.6518331170082092
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 1.0,
+        "answer_correct": true,
+        "mode": "baseline",
+        "query": "What is a large language model?"
+      }
+    ],
+    "corrected": [
+      {
+        "answer": "Based on the provided document, a Large Language Model (LLM) is a type of neural network trained on massive amounts of text data to predict the next word, or more precisely the next token, in a sequence.",
+        "final_outcome": "answered",
+        "total_attempts": 1,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+            "text": "How Large Language Models Work\n1. What Is a Large Language Model\nA Large Language Model (LLM) is a type of neural network trained on massive amounts of text data\nto predict the next word, or more precisely the next token, in a sequence. Despite this relatively\nsimple training objective, LLMs learn to capture grammar, facts, reasoning patterns, and even some\nlimited problem-solving ability purely from statistical patterns in the training data.\nModern LLMs are built on the Transformer architecture, introduced in the 2017 paper 'Attention Is All\nYou Need'. The Transformer replaced earlier recurrent architectures like RNNs and LSTMs with a\nmechanism called self-attention, which allows the model to weigh the relevance of every other token\nin a sequence when processing a given token, regardless of distance between them.\n2. Tokenization\nBefore text can be processed by an LLM, it must be converted into tokens, which are numerical\nrepresentations of subword units. Tokenization algorithms such a",
+            "doc_name": "how_llms_work.pdf",
+            "page": 1,
+            "score": 0.45859843492507935
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+            "text": "LLMs are typically trained in multiple stages. The first stage, pretraining, involves training the model\non a very large, diverse corpus of text using the next-token prediction objective. This stage requires\nenormous computational resources and is where the model acquires most of its general knowledge\nand language ability.\nThe second stage, often called fine-tuning or instruction tuning, involves further training the model on\nsmaller, curated datasets of instructions and desired responses, teaching the model to follow user\ninstructions more reliably.\nA third stage, commonly Reinforcement Learning from Human Feedback (RLHF), uses human\npreference data to further align model outputs with what humans consider helpful, honest, and\nharmless, by training a reward model and using it to fine-tune the LLM's behavior.\n5. Inference and Generation\nDuring inference, the model generates text one token at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.5605995059013367
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+            "text": "al parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum number of tokens they\ncan process in a single request, and their knowledge is limited to what was present in their training\ndata up to a specific cutoff date.",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6231819987297058
+          },
+          {
+            "chunk_id": "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+            "text": " at a time. At each step, it produces a probability\ndistribution over the entire vocabulary for the next token, and a sampling strategy, such as greedy\ndecoding, top-k sampling, or nucleus (top-p) sampling, is used to select the next token.\nParameters like temperature control the randomness of this selection: lower temperature values\nmake the output more deterministic and focused, while higher values increase diversity and creativity\nat the cost of coherence.\n6. Limitations\nLLMs are known to hallucinate, meaning they can generate plausible-sounding but factually incorrect\ninformation, since their knowledge is derived from statistical patterns rather than a verified, structured\ndatabase of facts. This is a key motivation behind Retrieval-Augmented Generation (RAG) systems,\nwhich ground model outputs in retrieved, verifiable source documents rather than relying solely on the\nmodel's internal parametric knowledge.\nAdditionally, LLMs have a fixed context window, meaning there is a maximum ",
+            "doc_name": "how_llms_work.pdf",
+            "page": 2,
+            "score": 0.6338602900505066
+          },
+          {
+            "chunk_id": "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0",
+            "text": "Pretraining, Fine-Tuning, and Instruction\nTuning\nHow language models acquire and adapt capabilities\nPurpose\nThis short reference note is written for learning, semantic retrieval, and grounded question-answering experiments.\nIt uses original explanatory content and is organized into coherent sections rather than unrelated filler.\n1. Pretraining\nPretraining exposes a model to a large collection of text or other data and optimizes it for a learning objective.\nMany autoregressive language models learn to predict the next token given preceding tokens. Through this\nobjective, the model learns statistical patterns in language, facts represented in its data, and structures useful for\ngenerating text. Pretraining is computationally expensive and the resulting model can still produce false statements\nor reflect limitations in its training data.\n2. Fine-Tuning\nFine-tuning continues training from an existing model using a more targeted dataset. The goal might be to improve\nperformance in a domain,",
+            "doc_name": "04_pretraining_finetuning_and_instruction_tuning.pdf",
+            "page": 1,
+            "score": 0.6518331170082092
+          }
+        ],
+        "retrieved_chunk_ids": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_3",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_5",
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_4",
+          "5a7340dfd9219db878cfb9a6a1eb3fee683b94046ced7f0fcdfacff4d00a48d2_0"
+        ],
+        "is_hallucination": null,
+        "is_adversarial": false,
+        "relevant_chunks": [
+          "9814669c968895a3e22e335de29b6cb58e0e11dfafcea91495a5a2797c72abac_0"
+        ],
+        "answer_correctness_score": 1.0,
+        "answer_correct": true,
+        "mode": "corrected",
+        "query": "What is a large language model?"
+      }
+    ]
+  },
+  "metrics": {
+    "baseline": {
+      "total_queries": 1,
+      "hallucination_rate": null,
+      "hallucination_rate_status": "not measured",
+      "false_answer_rate": 0.0,
+      "correct_abstention_rate": 0.0,
+      "abstention_rate": 0.0,
+      "recall_at_k": 1.0,
+      "hit_rate_at_k": 1.0,
+      "answer_correctness": 1.0,
+      "mean_answer_correctness_score": 1.0,
+      "retry_success_rate": 0.0,
+      "average_retries": 0.0
+    },
+    "corrected": {
+      "total_queries": 1,
+      "hallucination_rate": null,
+      "hallucination_rate_status": "not measured",
+      "false_answer_rate": 0.0,
+      "correct_abstention_rate": 0.0,
+      "abstention_rate": 0.0,
+      "recall_at_k": 1.0,
+      "hit_rate_at_k": 1.0,
+      "answer_correctness": 1.0,
+      "mean_answer_correctness_score": 1.0,
+      "retry_success_rate": 0.0,
+      "average_retries": 0.0
+    }
+  }
+}

@@ -10,7 +10,7 @@ from app.db import init_db
 from app.embedding_service import client
 from app.graph import graph
 from app.retriever import retrieve
-from app.trace_logger import log_attempt, log_run
+from app.trace_logger import log_evaluation_row
 from eval.baseline_runner import run_comparison
 from eval.eval_dataset import load_eval_queries
 from app.config import GENERATOR_MODEL
@@ -270,7 +270,7 @@ def main() -> None:
         mode = row["mode"]
         query = row["query"]
 
-        # Saved rows have already been persisted.
+        # Saved rows have already been persisted in this evaluation flow.
         if (mode, query) in cached:
             return
 
@@ -279,51 +279,49 @@ def main() -> None:
 
         # Compatibility fallback for older result shapes.
         if not attempts:
-            attempts = [{
-                "attempt_number": max(
-                    row.get("total_attempts", 1) - 1, 0
-                ),
-                "query_used": query,
-                "retrieved_chunks": row.get(
-                    "retrieved_chunks", []
-                ),
-                "generated_answer": row.get("answer", ""),
-                "judge_verdict": {},
-                "retrieve_latency_ms": 0.0,
-                "generate_latency_ms": 0.0,
-                "judge_latency_ms": 0.0,
-            }]
+            attempts = [
+                {
+                    "attempt_number": max(
+                        row.get("total_attempts", 1) - 1, 0
+                    ),
+                    "query_used": query,
+                    "retrieved_chunks": row.get(
+                        "retrieved_chunks", []
+                    ),
+                    "generated_answer": row.get("answer", ""),
+                    "judge_verdict": {},
+                    "retrieve_latency_ms": 0.0,
+                    "generate_latency_ms": 0.0,
+                    "judge_latency_ms": 0.0,
+                }
+            ]
 
-        for attempt in attempts:
-            log_attempt(
-                run_id=run_id,
-                attempt_number=attempt["attempt_number"],
-                query_used=attempt.get("query_used", query),
-                retrieved_chunks=attempt.get(
-                    "retrieved_chunks", []
-                ),
-                generated_answer=attempt.get(
-                    "generated_answer", ""
-                ),
-                judge_verdict=attempt.get("judge_verdict") or {},
-                retrieve_latency_ms=attempt.get(
-                    "retrieve_latency_ms", 0.0
-                ),
-                generate_latency_ms=attempt.get(
-                    "generate_latency_ms", 0.0
-                ),
-                judge_latency_ms=attempt.get(
-                    "judge_latency_ms", 0.0
-                ),
-            )
+        total_latency_ms = sum(
+            attempt.get("retrieve_latency_ms", 0.0)
+            + attempt.get("generate_latency_ms", 0.0)
+            + attempt.get("judge_latency_ms", 0.0)
+            for attempt in attempts
+        )
 
-        log_run(
+        total_cost = sum(
+            attempt.get("retrieve_cost", 0.0)
+            + attempt.get("generate_cost", 0.0)
+            + attempt.get("judge_cost", 0.0)
+            for attempt in attempts
+        )
+
+        # Persist the attempts and run summary together.
+        # Existing run IDs are updated safely by log_evaluation_row().
+        log_evaluation_row(
             run_id=run_id,
             original_query=query,
             final_outcome=row["final_outcome"],
             total_attempts=row.get(
                 "total_attempts", len(attempts)
             ),
+            attempts=attempts,
+            total_latency_ms=total_latency_ms,
+            total_cost=total_cost,
             mode=mode,
             is_adversarial=row["is_adversarial"],
         )
