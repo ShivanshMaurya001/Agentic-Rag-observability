@@ -1,4 +1,7 @@
 
+import time
+from typing import Any
+
 from app.abstain import abstain_node
 from app.embedding_service import client
 from app.judge import judge_answer
@@ -6,18 +9,38 @@ from app.retriever import retrieve
 from app.state import GraphState
 from app.prompts.rewrite_prompt import build_rewrite_prompt
 from langgraph.graph import END, START, StateGraph
+from app.config import GENERATOR_MODEL, REWRITE_MODEL
 
 
 def retrieve_node(state: GraphState) -> GraphState:
+    # Reuse baseline chunks on the corrected run's first attempt.
+    if (
+        state.get("reuse_initial_attempt", False)
+        and state["attempt_number"] == 0
+        and state.get("retrieved_chunks")
+    ):
+        return state
+
+    start_time = time.perf_counter()
     chunks = retrieve(state["current_query"])
+    latency_ms = (time.perf_counter() - start_time) * 1000
 
     return {
         **state,
         "retrieved_chunks": chunks,
+        "retrieve_latency_ms": latency_ms,
     }
 
 
 def generate_node(state: GraphState) -> GraphState:
+    # Reuse baseline answer on the first corrected attempt.
+    if (
+        state.get("reuse_initial_attempt", False)
+        and state["attempt_number"] == 0
+        and state.get("answer")
+    ):
+        return state
+
     context = "\n\n".join(
         chunk["text"] for chunk in state["retrieved_chunks"]
     )
@@ -27,7 +50,7 @@ You are an assistant that answers questions about a document.
 
 Use ONLY the information provided in the context below.
 
-If the answer is not present in the context, say:
+If the answer is not present, say:
 "The answer was not found in the document."
 
 Context:
@@ -39,10 +62,12 @@ Question:
 Answer:
 """.strip()
 
+    start_time = time.perf_counter()
     response = client.models.generate_content(
-        model="gemini-3.6-flash",
+        model=GENERATOR_MODEL,
         contents=prompt,
     )
+    latency_ms = (time.perf_counter() - start_time) * 1000
 
     if response is None or response.text is None:
         raise ValueError("Gemini generator returned no answer.")
@@ -50,7 +75,20 @@ Answer:
     return {
         **state,
         "answer": response.text,
+        "generate_latency_ms": latency_ms,
     }
+
+
+def _verdict_to_dict(verdict: Any) -> dict[str, Any]:
+    if hasattr(verdict, "model_dump"):
+        return verdict.model_dump()
+
+    if hasattr(verdict, "dict"):
+        return verdict.dict()
+
+    raise TypeError(
+        "Judge verdict must support model_dump() or dict()."
+    )
 
 
 def judge_node(state: GraphState) -> GraphState:
@@ -58,11 +96,24 @@ def judge_node(state: GraphState) -> GraphState:
         chunk["text"] for chunk in state["retrieved_chunks"]
     )
 
+    start_time = time.perf_counter()
     verdict = judge_answer(
         query=state["current_query"],
         context=context,
         answer=state["answer"],
     )
+    judge_latency_ms = (time.perf_counter() - start_time) * 1000
+
+    attempt = {
+        "attempt_number": state["attempt_number"],
+        "query_used": state["current_query"],
+        "retrieved_chunks": state["retrieved_chunks"],
+        "generated_answer": state["answer"],
+        "judge_verdict": _verdict_to_dict(verdict),
+        "retrieve_latency_ms": state.get("retrieve_latency_ms", 0.0),
+        "generate_latency_ms": state.get("generate_latency_ms", 0.0),
+        "judge_latency_ms": judge_latency_ms,
+    }
 
     return {
         **state,
@@ -70,6 +121,10 @@ def judge_node(state: GraphState) -> GraphState:
         "failure_type": [
             *state["failure_type"],
             verdict.failure_type,
+        ],
+        "attempts": [
+            *state.get("attempts", []),
+            attempt,
         ],
     }
 
@@ -95,7 +150,7 @@ def rewrite_query_node(state: GraphState) -> GraphState:
     )
 
     response = client.models.generate_content(
-        model="gemini-3.6-flash",
+        model=REWRITE_MODEL,
         contents=prompt,
     )
 
@@ -119,7 +174,7 @@ You are an assistant that answers questions about a document.
 
 Use ONLY the information provided in the context below.
 
-If the answer is not present in the context, say:
+If the answer is not present, say:
 "The answer was not found in the document."
 
 Context:
@@ -136,10 +191,12 @@ Generate a corrected answer using the same retrieved context.
 Answer:
 """.strip()
 
+    start_time = time.perf_counter()
     response = client.models.generate_content(
-        model="gemini-3.6-flash",
+        model=GENERATOR_MODEL,
         contents=prompt,
     )
+    latency_ms = (time.perf_counter() - start_time) * 1000
 
     if response is None or response.text is None:
         raise ValueError("Gemini regeneration returned no answer.")
@@ -147,6 +204,7 @@ Answer:
     return {
         **state,
         "answer": response.text,
+        "generate_latency_ms": latency_ms,
         "attempt_number": state["attempt_number"] + 1,
     }
 
