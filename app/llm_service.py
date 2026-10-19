@@ -11,6 +11,7 @@ MAX_TRANSPORT_RETRIES = 2
 
 SchemaT = TypeVar("SchemaT", bound=BaseModel)
 _client: OpenAI | None = None
+_usage_by_model: dict[str, dict[str, int]] = {}
 
 
 class LLMServiceError(RuntimeError):
@@ -57,6 +58,59 @@ def _raise_request_error(operation: str, error: Exception) -> None:
     ) from None
 
 
+def reset_usage_summary() -> None:
+    """Clear token usage collected for the next evaluation run."""
+    _usage_by_model.clear()
+
+
+def get_usage_summary() -> dict[str, dict[str, int]]:
+    """Return per-model token totals and counts of calls without usage."""
+    return {model: totals.copy() for model, totals in _usage_by_model.items()}
+
+
+def _record_usage(model: str, response: object | None) -> None:
+    response_model = getattr(response, "model", None) if response else None
+    model_name = response_model or model
+    totals = _usage_by_model.setdefault(
+        model_name,
+        {
+            "calls": 0,
+            "usage_unavailable_calls": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_tokens": 0,
+            "reasoning_usage_unavailable_calls": 0,
+        },
+    )
+    totals["calls"] += 1
+
+    usage = getattr(response, "usage", None) if response else None
+    input_tokens = getattr(usage, "input_tokens", None) if usage else None
+    output_tokens = getattr(usage, "output_tokens", None) if usage else None
+    usage_incomplete = False
+    if isinstance(input_tokens, int) and not isinstance(input_tokens, bool) and input_tokens >= 0:
+        totals["input_tokens"] += input_tokens
+    else:
+        usage_incomplete = True
+    if isinstance(output_tokens, int) and not isinstance(output_tokens, bool) and output_tokens >= 0:
+        totals["output_tokens"] += output_tokens
+    else:
+        usage_incomplete = True
+    if usage_incomplete:
+        totals["usage_unavailable_calls"] += 1
+
+    details = getattr(usage, "output_tokens_details", None)
+    reasoning_tokens = getattr(details, "reasoning_tokens", None)
+    if (
+        isinstance(reasoning_tokens, int)
+        and not isinstance(reasoning_tokens, bool)
+        and reasoning_tokens >= 0
+    ):
+        totals["reasoning_tokens"] += reasoning_tokens
+    else:
+        totals["reasoning_usage_unavailable_calls"] += 1
+
+
 def generate_text(prompt: str, model: str) -> str:
     """Generate plain text, returning only completed non-empty output."""
     client = _get_client()
@@ -66,7 +120,10 @@ def generate_text(prompt: str, model: str) -> str:
             input=prompt,
         )
     except Exception as error:
+        _record_usage(model, None)
         _raise_request_error("text generation", error)
+
+    _record_usage(model, response)
 
     if getattr(response, "status", None) != "completed":
         raise LLMIncompleteResponseError(
@@ -96,7 +153,10 @@ def generate_structured(
             text_format=schema,
         )
     except Exception as error:
+        _record_usage(model, None)
         _raise_request_error("structured generation", error)
+
+    _record_usage(model, response)
 
     if getattr(response, "status", None) != "completed":
         raise LLMIncompleteResponseError(

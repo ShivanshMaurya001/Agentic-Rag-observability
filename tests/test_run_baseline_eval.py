@@ -413,3 +413,60 @@ def test_resume_does_not_reuse_other_provider_row(
     assert len(baseline_rows) == 2
     assert baseline_rows[0]["answer"] == "Gemini cached answer"
     assert baseline_rows[1]["providers"] == {"generator": "openai"}
+
+
+def test_main_selects_dataset_positions_and_isolates_results_path(
+    tmp_path, monkeypatch
+):
+    import scripts.run_baseline_eval as evaluation
+
+    main_results = tmp_path / "baseline_results.json"
+    main_results.write_text("keep main results", encoding="utf-8")
+    smoke_results = tmp_path / "smoke_results.json"
+    monkeypatch.setattr(evaluation, "RESULTS_PATH", main_results)
+    monkeypatch.setattr(evaluation, "init_db", lambda: None)
+    monkeypatch.setattr(evaluation, "log_evaluation_row", lambda **kwargs: None)
+    monkeypatch.setattr(
+        evaluation,
+        "run_baseline",
+        lambda item: {
+            "answer": "mock answer",
+            "final_outcome": "answered",
+            "total_attempts": 1,
+            "retrieved_chunks": [],
+            "retrieved_chunk_ids": [],
+            "attempts": [],
+            "is_hallucination": None,
+        },
+    )
+    monkeypatch.setattr(
+        evaluation,
+        "run_corrected",
+        lambda item: {
+            "answer": "mock answer",
+            "final_outcome": "answered",
+            "total_attempts": 1,
+            "retrieved_chunks": [],
+            "retrieved_chunk_ids": [],
+            "attempts": [],
+            "is_hallucination": None,
+        },
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_baseline_eval.py",
+            "--query-indices", "0", "1", "7",
+            "--results-path", str(smoke_results),
+        ],
+    )
+
+    evaluation.main()
+
+    saved = json.loads(smoke_results.read_text(encoding="utf-8"))
+    for mode in ("baseline", "corrected"):
+        rows = saved["results"][mode]
+        assert [row["is_adversarial"] for row in rows] == [False, False, True]
+        assert saved["metrics"][mode]["total_queries"] == 3
+    assert main_results.read_text(encoding="utf-8") == "keep main results"

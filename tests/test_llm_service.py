@@ -153,3 +153,53 @@ def test_client_configures_bounded_transport_retries(monkeypatch):
 
     assert created["max_retries"] == 2
     assert created["api_key"] == "test-key"
+
+
+def test_usage_summary_accumulates_resets_and_marks_unavailable(monkeypatch):
+    llm_service.reset_usage_summary()
+    responses = iter([
+        SimpleNamespace(
+            status="completed",
+            output_text="one",
+            model="gpt-6-luna",
+            usage=SimpleNamespace(
+                input_tokens=10,
+                output_tokens=5,
+                output_tokens_details=SimpleNamespace(reasoning_tokens=0),
+            ),
+        ),
+        SimpleNamespace(
+            status="completed", output_text="two", model="gpt-6-luna",
+            usage=SimpleNamespace(input_tokens=3, output_tokens=None),
+        ),
+        SimpleNamespace(status="completed", output_text="three"),
+    ])
+    fake_client = SimpleNamespace(
+        responses=SimpleNamespace(create=lambda **kwargs: next(responses))
+    )
+    monkeypatch.setattr(llm_service, "_get_client", lambda: fake_client)
+
+    for model in ("gpt-6-luna", "gpt-6-luna", "other-model"):
+        llm_service.generate_text("prompt", model=model)
+
+    assert llm_service.get_usage_summary() == {
+        "gpt-6-luna": {
+            "calls": 2,
+            "usage_unavailable_calls": 1,
+            "input_tokens": 13,
+            "output_tokens": 5,
+            "reasoning_tokens": 0,
+            "reasoning_usage_unavailable_calls": 1,
+        },
+        "other-model": {
+            "calls": 1,
+            "usage_unavailable_calls": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_tokens": 0,
+            "reasoning_usage_unavailable_calls": 1,
+        },
+    }
+
+    llm_service.reset_usage_summary()
+    assert llm_service.get_usage_summary() == {}

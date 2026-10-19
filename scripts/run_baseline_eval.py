@@ -11,7 +11,11 @@ from typing import Any
 
 from app.db import init_db
 from app.graph import graph
-from app.llm_service import generate_text
+from app.llm_service import (
+    generate_text,
+    get_usage_summary,
+    reset_usage_summary,
+)
 from app.retriever import retrieve
 from app.trace_logger import log_evaluation_row
 from eval.baseline_runner import calculate_metrics, run_comparison
@@ -207,14 +211,15 @@ def run_corrected(
     }
 
 
-def load_saved_results() -> dict[str, Any]:
-    if not RESULTS_PATH.exists():
+def load_saved_results(path: Path | None = None) -> dict[str, Any]:
+    path = path or RESULTS_PATH
+    if not path.exists():
         return {
             "results": {"baseline": [], "corrected": []},
             "metrics": {},
         }
 
-    with RESULTS_PATH.open("r", encoding="utf-8") as file:
+    with path.open("r", encoding="utf-8") as file:
         saved = json.load(file)
 
     saved.setdefault("results", {})
@@ -326,11 +331,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Run M4 baseline vs corrected evaluation."
     )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=None,
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument(
+        "--limit", type=int, default=None,
         help="Evaluate only the first N queries.",
+    )
+    selection.add_argument(
+        "--query-indices", type=int, nargs="+",
+        help="Evaluate only these zero-based dataset positions.",
+    )
+    parser.add_argument(
+        "--results-path", type=Path, default=RESULTS_PATH,
+        help="JSON results/checkpoint path.",
     )
     parser.add_argument(
         "--resume",
@@ -343,13 +355,31 @@ def main() -> None:
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be at least 1")
 
+    if args.query_indices is not None and (
+        len(set(args.query_indices)) != len(args.query_indices)
+        or any(index < 0 for index in args.query_indices)
+    ):
+        parser.error("--query-indices must contain unique non-negative positions")
+
+    results_path = args.results_path
+    if (
+        args.query_indices is not None
+        and results_path.resolve() == RESULTS_PATH.resolve()
+    ):
+        parser.error("--query-indices requires a separate --results-path")
+
+    reset_usage_summary()
     init_db()
 
     dataset = load_eval_queries()
     if args.limit is not None:
         dataset = dataset[:args.limit]
+    if args.query_indices is not None:
+        if any(index >= len(dataset) for index in args.query_indices):
+            parser.error("--query-indices contains a position outside the dataset")
+        dataset = [dataset[index] for index in args.query_indices]
 
-    saved = load_saved_results()
+    saved = load_saved_results(results_path)
 
     cached: dict[tuple[str, str, str], dict[str, Any]] = {}
 
@@ -475,7 +505,7 @@ def main() -> None:
         merge_result_row(saved["results"].setdefault(mode, []), row)
         refresh_active_metrics(saved, ACTIVE_METADATA)
         backup_checked, _ = checkpoint_results(
-            RESULTS_PATH,
+            results_path,
             saved,
             backup_checked=backup_checked,
         )
@@ -490,13 +520,14 @@ def main() -> None:
 
     refresh_active_metrics(saved, ACTIVE_METADATA)
     backup_checked, _ = checkpoint_results(
-        RESULTS_PATH,
+        results_path,
         saved,
         backup_checked=backup_checked,
     )
 
     print(json.dumps(saved["metrics"], indent=2))
-    print(f"Saved evaluation results to: {RESULTS_PATH}")
+    print(f"Saved evaluation results to: {results_path}")
+    print(f"LLM token usage: {json.dumps(get_usage_summary(), sort_keys=True)}")
 
 
 if __name__ == "__main__":
