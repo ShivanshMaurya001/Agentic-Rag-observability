@@ -37,3 +37,32 @@
 ## Decisions
 
 - **Approved provider exception:** Answer generation, query rewriting, regeneration, and structured judging use the OpenAI API. Gemini remains responsible for embeddings. The locked PRD and Implementation Blueprint are unchanged.
+
+
+
+## M4 Evaluation Findings
+
+The M4 evaluation compares the baseline RAG pipeline with the corrective retry pipeline across 60 queries, including approximately 13 adversarial queries.
+
+### Key Results
+
+| Metric | Baseline | Corrected |
+|---|---:|---:|
+| False Answer Rate | 0% | 61.54% |
+| Correct Abstention Rate | 100% | 38.46% |
+| Abstention Rate | 23.33% | 8.33% |
+| Recall@k | 72.34% | 72.34% |
+| Hit Rate@k | 74.47% | 74.47% |
+| Judge-approved after Retry | 0% | 92.31% |
+
+### Key Observations
+
+- The corrected pipeline has a higher false-answer rate (61.54%) compared with the baseline (0%).
+- The adversarial sample is small (approximately 13 queries), so these results should be interpreted cautiously.
+- One hypothesis is that query rewriting retrieves off-topic context and the judge approves an answer based on groundedness without adequately checking relevance to the original query. This is a hypothesis, not a confirmed root cause.
+- The 92.31% retry success metric represents answers approved by the judge after retry. It does not establish factual correctness.
+- Recall@k and Hit Rate@k are identical across both modes. Therefore, this evaluation does not demonstrate retrieval improvement.
+
+### Evaluation Interpretation
+
+The corrective pipeline successfully demonstrates the retry workflow, but the current evaluation does not establish that it improves answer correctness or reduces hallucinations. The results expose weaknesses in the current judge and corrective process that should remain visible in the baseline comparison.
