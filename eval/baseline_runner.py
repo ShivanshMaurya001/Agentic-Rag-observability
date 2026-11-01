@@ -39,10 +39,154 @@ def is_abstained(row: dict[str, Any]) -> bool:
         return True
 
     answer = row.get("answer", "")
-    return (
-        isinstance(answer, str)
-        and NOT_FOUND_SENTENCE in answer
+    if not isinstance(answer, str):
+        return False
+    if NOT_FOUND_SENTENCE in answer:
+        return True
+
+    query = row.get("query")
+    if not isinstance(query, str):
+        return False
+
+    absence_patterns = (
+        re.compile(
+            r"\b(?:the\s+|these\s+|provided\s+)?"
+            r"(?:documents?|pdf)\b.{0,100}\b(?:does|do)\s+not\s+"
+            r"(?:mention|provide|state|specify|identify|name|contain|give|include)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(?:the\s+)?(?:provided\s+)?context\b.{0,100}"
+            r"\b(?:does|do)\s+not\s+"
+            r"(?:mention|provide|state|specify|identify|name|contain|give|include)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(?:this information|the exact\b.{0,100}?|"
+            r"the\b.{0,100}?)\s+(?:is|are)\s+not\s+"
+            r"(?:specified|stated|provided|available)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\bno information\s+(?:is|was)\s+available\b"
+            r"(?:.{0,60}\b(?:document|pdf|context)\b)?",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\bit\s+(?:does|do)\s+not\s+"
+            r"(?:mention|provide|state|specify|identify|name|contain|give|include)\b",
+            re.IGNORECASE,
+        ),
     )
+    # A bare "it does not ..." is usable as a follow-up clause only when the
+    # same answer also contains a source-qualified or passive absence claim.
+    if not any(pattern.search(answer) for pattern in absence_patterns[:-1]):
+        return False
+
+    query_lower = query.lower()
+    categories: set[str] = set()
+    if re.search(r"\b(?:benchmark|metric|score)\b", query_lower):
+        categories.add("benchmark_score")
+    if re.search(r"\b(?:dataset|corpus)\b", query_lower):
+        categories.add("dataset")
+    if re.search(r"\bversion\b", query_lower):
+        categories.add("version")
+    if re.search(r"\b(?:date|when|year)\b", query_lower):
+        categories.add("date")
+    if re.search(r"\bparameters?\b", query_lower):
+        categories.add("parameter_count")
+    if re.search(r"\b(?:gpu|gpus|accelerator|hardware|nodes?)\b", query_lower):
+        categories.add("hardware")
+    if re.search(r"\b(?:context.window|tokens?)\b", query_lower):
+        categories.add("context_limit")
+    if re.search(r"\bmodel\b", query_lower):
+        categories.add("model")
+    if not categories:
+        return False
+
+    positive_answer_patterns = {
+        "benchmark_score": re.compile(
+            r"\b(?:benchmark|metric)\b.{0,30}\b(?:score|value)\b"
+            r"\s*(?:is|was|of|:)?\s*\d+(?:\.\d+)?(?:\s*%|\s*/\s*\d+)?"
+            r"|\b(?:score|scored)\s*(?:is|was|of|:)?\s*"
+            r"\d+(?:\.\d+)?(?:\s*%|\s*/\s*\d+)?",
+            re.IGNORECASE,
+        ),
+        "dataset": re.compile(
+            r"\b(?:identifies?|names?|calls?)\s+(?:the\s+)?"
+            r"(?:training\s+)?dataset\s+as\s+"
+            r"[A-Z][\w.-]*(?:\s+[A-Z][\w.-]*)*"
+            r"|\b(?:dataset|corpus)\s+(?:is|was|called|named)\s+"
+            r"[A-Z][\w.-]*(?:\s+[A-Z][\w.-]*)*"
+        ),
+        "version": re.compile(
+            r"\bversion\s*(?:is|was|:)?\s*v?\d+(?:\.\d+)*\b",
+            re.IGNORECASE,
+        ),
+        "date": re.compile(
+            r"\b(?:19|20)\d{2}\b|"
+            r"\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|"
+            r"may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|"
+            r"oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+"
+            r"\d{1,2}(?:,\s*\d{4})?\b",
+            re.IGNORECASE,
+        ),
+        "parameter_count": re.compile(
+            r"\b\d[\d,.]*\s*(?:million|billion|trillion)?\s*"
+            r"parameters?\b|\bparameters?\s*(?:number|count)?\s*"
+            r"(?:is|was|:)?\s*\d[\d,.]*\b",
+            re.IGNORECASE,
+        ),
+        "hardware": re.compile(
+            r"\b\d+\s*(?:gpus?|nodes?)\b|"
+            r"\b(?:gpu|accelerator)(?:\s+model)?\s+"
+            r"(?:is|was|:)?\s*(?:nvidia\s+)?[A-Z]\d{2,}\b",
+            re.IGNORECASE,
+        ),
+        "context_limit": re.compile(
+            r"\b\d[\d,.]*\s*(?:k|m)?\s*tokens?\b|"
+            r"\bcontext.window\s*(?:size|limit)?\s*(?:is|was|:)?\s*"
+            r"\d[\d,.]*\b",
+            re.IGNORECASE,
+        ),
+        "model": re.compile(
+            r"\bmodel\s+(?:is|was|called|named)\s+"
+            r"[A-Z][\w.-]*(?:\s+[A-Z][\w.-]*)*"
+        ),
+    }
+
+    # Check clauses separately so absence statements do not count as supplied
+    # values. Only the two reviewed generic-context tails are allowed; other
+    # non-refusal text is ambiguous and retains the old classification.
+    affirmative_clauses = re.split(
+        r"(?i)\b(?:but|however)\b|[.!?;]", answer
+    )
+    for clause in affirmative_clauses:
+        if not clause.strip().strip("\"'“”‘’"):
+            continue
+        if any(pattern.search(clause) for pattern in absence_patterns):
+            continue
+        if any(
+            positive_answer_patterns[category].search(clause)
+            for category in categories
+        ):
+            return False
+        if re.fullmatch(
+            r"\s*it only describes pretraining as using\s+"
+            r"[\"“]?a very large, diverse corpus of text[\"”]?\s*",
+            clause,
+            re.IGNORECASE,
+        ) or re.fullmatch(
+            r"\s*it only says that pretraining\s+"
+            r"[\"“]?requires enormous computational resources[\"”]?\s*",
+            clause,
+            re.IGNORECASE,
+        ):
+            continue
+        if clause.strip():
+            return False
+
+    return True
 
 
 def _key_terms(text: str) -> set[str]:

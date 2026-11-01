@@ -287,6 +287,147 @@ def test_explicit_final_judge_classification_takes_precedence():
     assert is_abstained(row) is False
 
 
+def test_reviewed_corrected_refusals_are_abstentions():
+    reviewed_refusals = [
+        (
+            "What was the exact benchmark score of the LLM in the 2024 Mars Olympics?",
+            "The document does not mention the 2024 Mars Olympics or provide an LLM benchmark score.",
+        ),
+        (
+            "According to these documents, what exact date will the next generation of LLMs become fully conscious?",
+            "The documents do not provide a date or an explicit discussion or prediction about when the next generation of LLMs will become fully conscious.",
+        ),
+        (
+            "How many parameters did the LLM in these documents have?",
+            "The document refers to LLMs generically and does not name a specific model. It does not state a parameter count.",
+        ),
+        (
+            "What exact GPU model and number of GPUs were used to pretrain the LLM discussed in these documents?",
+            "This information is not specified.",
+        ),
+        (
+            "Which specific dataset and version were used to train the LLM described in the document?",
+            "The document does not identify a specific dataset or version used to train the LLM. It only describes pretraining as using “a very large, diverse corpus of text.”",
+        ),
+        (
+            "What exact maximum context-window size does the PDF specify for the model discussed?",
+            "The PDF discusses models in general and does not identify a specific model. It does not state a maximum context-window size in tokens or give a specific numeric limit.",
+        ),
+        (
+            "Which exact date and dataset version were used for the model's training run?",
+            "The exact date of the model’s training run and the dataset version used are not stated in the document.",
+        ),
+        (
+            "What exact hardware and GPU count were used to train the model described in the PDF?",
+            "The PDF does not specify the accelerator/GPU model or the number of GPUs or nodes. It only says that pretraining “requires enormous computational resources.”",
+        ),
+    ]
+
+    for query, answer in reviewed_refusals:
+        assert is_abstained({
+            "query": query,
+            "answer": answer,
+            "final_outcome": "answered_after_retry",
+        }) is True
+
+
+def test_query_specific_answer_veto_preserves_mixed_common_crawl_answer():
+    row = {
+        "query": "Which specific dataset and version were used to train the LLM?",
+        "answer": (
+            "The document does not specify the dataset version, but it identifies "
+            "the training dataset as Common Crawl."
+        ),
+        "final_outcome": "answered_after_retry",
+    }
+
+    assert is_abstained(row) is False
+
+
+def test_instruction_tuning_negative_is_not_an_absence_pattern():
+    row = {
+        "query": "How does instruction tuning affect a pretrained language model?",
+        "answer": (
+            "Instruction tuning further trains a pretrained model on examples "
+            "pairing instructions with desired responses. It aims to make the "
+            "model more helpful at following user requests and producing "
+            "expected formats, but does not guarantee that it will follow every "
+            "instruction or distinguish evidence from speculation."
+        ),
+        "final_outcome": "answered_after_retry",
+    }
+
+    assert is_abstained(row) is False
+
+
+def test_explicit_benchmark_metric_value_veto_preserves_answered_classification():
+    row = {
+        "query": "What was the benchmark score of the model?",
+        "answer": (
+            "The document does not discuss the benchmark, but reports a "
+            "benchmark score of 87.5%."
+        ),
+        "final_outcome": "answered_after_retry",
+    }
+
+    assert is_abstained(row) is False
+
+
+def test_query_category_value_vetoes_preserve_answered_classification():
+    answered_values = [
+        (
+            "What dataset version was used?",
+            "The document does not specify the dataset version, but the version is 2.1.",
+        ),
+        (
+            "What was the training date?",
+            "The document does not state the training date, but the run occurred in 2023.",
+        ),
+        (
+            "How many parameters did the model have?",
+            "The document does not state the parameter count, but the model has 7 billion parameters.",
+        ),
+        (
+            "How many GPUs were used?",
+            "The document does not identify the GPU count, but it used 8 GPUs.",
+        ),
+        (
+            "What was the context window size in tokens?",
+            "The document does not specify the context window, but it supports 128k tokens.",
+        ),
+        (
+            "Which model was used?",
+            "The document does not name the model, but the model was GPT-4.",
+        ),
+    ]
+
+    for query, answer in answered_values:
+        assert is_abstained({
+            "query": query,
+            "answer": answer,
+            "final_outcome": "answered",
+        }) is False
+
+
+def test_ambiguous_or_unsupported_absence_preserves_existing_classification():
+    unsupported = {
+        "query": "What is the broader significance of this discussion?",
+        "answer": "The document does not specify this information.",
+        "final_outcome": "answered",
+    }
+    ambiguous = {
+        "query": "Which model was used?",
+        "answer": (
+            "The document does not name the model. It discusses the system "
+            "in relation to several other methods."
+        ),
+        "final_outcome": "answered",
+    }
+
+    assert is_abstained(unsupported) is False
+    assert is_abstained(ambiguous) is False
+
+
 def test_run_comparison_returns_both_modes():
     dataset = [
         {
