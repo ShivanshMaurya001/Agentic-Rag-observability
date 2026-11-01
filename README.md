@@ -3,7 +3,7 @@
 ## KNOWN_ISSUES
 
 - **Judge latency:** `judge_latency_ms` is recorded as `0` in SQLite on `main`; a callback-based attempt exists on branch `wip/callback-timing` and is unverified.
-- **Cost fields:** Cost values are currently unmeasured placeholders (`0`). Do not present them as measured costs or display them in the dashboard unless actual cost measurement is implemented and verified.
+ **Cost fields:** Cost values are currently unmeasured placeholders (`0`). Do not present them as measured costs or display them in the dashboard unless actual cost measurement is implemented and verified.
 
 ## M3 Test Results
 
@@ -38,31 +38,33 @@
 
 - **Approved provider exception:** Answer generation, query rewriting, regeneration, and structured judging use the OpenAI API. Gemini remains responsible for embeddings. The locked PRD and Implementation Blueprint are unchanged.
 
-
-
 ## M4 Evaluation Findings
 
-The M4 evaluation compares the baseline RAG pipeline with the corrective retry pipeline across 60 queries, including approximately 13 adversarial queries.
+The M4 evaluation compares the baseline RAG pipeline with the corrective retry pipeline across 60 queries, including 13 adversarial queries.
 
 ### Key Results
 
 | Metric | Baseline | Corrected |
-|---|---:|---:|
-| False Answer Rate | 0% | 61.54% |
-| Correct Abstention Rate | 100% | 38.46% |
-| Abstention Rate | 23.33% | 8.33% |
+|---|---: |---:|
+| False Answer Rate | 0/13 = 0% | 0/13 = 0% |
+| Correct Abstention Rate | 13/13 = 100% | 13/13 = 100% |
+| Hallucination Rate | 26/46 = 56.52% | 27/47 = 57.45% |
+| Answer Correctness | 20/47 = 42.55% | 20/47 = 42.55% |
+| General Abstention Rate | 14/60 = 23.33% | 13/60 = 21.67% |
 | Recall@k | 72.34% | 72.34% |
 | Hit Rate@k | 74.47% | 74.47% |
-| Judge-approved after Retry | 0% | 92.31% |
+| Judge-approved after Retry | n/a (no baseline retries) | 12/13 = 92.31% |
 
 ### Key Observations
 
-- The corrected pipeline has a higher false-answer rate (61.54%) compared with the baseline (0%).
-- The adversarial sample is small (approximately 13 queries), so these results should be interpreted cautiously.
-- One hypothesis is that query rewriting retrieves off-topic context and the judge approves an answer based on groundedness without adequately checking relevance to the original query. This is a hypothesis, not a confirmed root cause.
-- The 92.31% retry success metric represents answers approved by the judge after retry. It does not establish factual correctness.
+- The original abstention detector missed eight reviewed natural-language refusals in corrected-mode evaluation rows. The deterministic detector correction recognizes those eight cases. This changes their classification from answered to abstained; it does not change the generated answers.
+- The corrected False Answer Rate is now 0%, but this is a classification correction, not evidence of improved generation quality. Both modes have identical measured Answer Correctness (20/47 = 42.55%); self-correction did not improve this measure.
+- Hallucination Rate is an offline ground-truth/key-term coverage proxy, not an objective claim that 57% of answers are wrong. `answer_correct` uses expected-answer key-term coverage with a 0.6 threshold. It is not semantic scoring and may miss valid paraphrases or overestimate correctness when terms appear without the intended meaning.
+- The adversarial sample is small (13 queries), so these results should be interpreted cautiously.
+- A separate SQLite trace investigation found that 12 of 13 corrected adversarial runs had first attempts marked `retrieval`, even though the judge reasons acknowledged that the generated refusal correctly stated the information was missing. All 12 were followed by another refusal; 11 ended as `answered_after_retry` and one as `abstained_judge_rejected`. This suggests the retry loop can spend additional calls retrying an already-correct refusal. These SQLite runs are not proven to be the same population as the 13 offline evaluation rows, and this inspection does not establish exact cost savings or row-level matching.
+- The 92.31% **Judge-approved after Retry** metric represents answers approved by the judge after retry. It does not establish factual correctness.
 - Recall@k and Hit Rate@k are identical across both modes. Therefore, this evaluation does not demonstrate retrieval improvement.
 
 ### Evaluation Interpretation
 
-The corrective pipeline successfully demonstrates the retry workflow, but the current evaluation does not establish that it improves answer correctness or reduces hallucinations. The results expose weaknesses in the current judge and corrective process that should remain visible in the baseline comparison.
+The corrective pipeline demonstrates the retry workflow, but the current evaluation does not establish that it improves answer correctness or retrieval. The abstention correction changes classification of the reviewed refusals; it does not establish improved generation quality or reduced hallucinations. The results expose limitations in the current judge and corrective process that should remain visible in the baseline comparison.
