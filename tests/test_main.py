@@ -12,6 +12,7 @@ def test_query_endpoint_logs_run_and_attempt():
         "retrieval_quality": 0.9,
         "answer_quality": 0.95,
         "failure_type": "none",
+        "is_abstention": False,
         "reason": "Answer is supported by the retrieved context.",
     }
 
