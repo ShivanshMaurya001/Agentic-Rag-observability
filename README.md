@@ -20,7 +20,9 @@
 - **Abstained answerable queries:** Counted as incorrect for answer correctness.
 - **Adversarial queries:** Answer correctness is not scored for these queries.
 
-Baseline and corrected evaluation report hallucination rate, False Answer Rate, Correct Abstention Rate, and general abstention rate, alongside the additional retrieval and retry metrics implemented by the evaluation runner.
+**Hallucination Rate (owner decision):** An answered query is one for which `is_abstained()` returns false. Every answered adversarial query counts as a hallucination; an answered non-adversarial query counts only when its saved `answer_correct` value is false. The rate is hallucinated answered queries divided by all answered queries. It is `null` when there are no answered queries or when an answered non-adversarial row lacks a boolean `answer_correct` value; the status identifies the zero-answer or incomplete-data case. This is a ground-truth proxy based on answer correctness, not a separate judge-verdict metric.
+
+`answer_correct` uses offline expected-answer key-term coverage with a `0.6` threshold. This proxy inherits the limitation above: it is not semantic scoring and may miss valid paraphrases or overestimate correctness when terms appear without the intended meaning. Baseline and corrected evaluation report this rate alongside False Answer Rate, Correct Abstention Rate, general abstention rate, and the additional retrieval and retry metrics implemented by the evaluation runner.
 
 **Metric interpretation:** Cost fields are placeholders until actual cost measurement is implemented and verified. Judge latency is also a known issue documented under `KNOWN_ISSUES`; do not treat its current SQLite value as measured latency.
 
