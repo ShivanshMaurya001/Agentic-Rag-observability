@@ -12,6 +12,7 @@ def test_valid_judge_verdict():
         retrieval_quality=0.9,
         answer_quality=0.8,
         failure_type="none",
+        is_abstention=False,
         reason="The answer is supported by the retrieved context.",
     )
 
@@ -19,6 +20,7 @@ def test_valid_judge_verdict():
     assert verdict.retrieval_quality == 0.9
     assert verdict.answer_quality == 0.8
     assert verdict.failure_type == "none"
+    assert verdict.is_abstention is False
 
 
 def test_invalid_failure_type_fails():
@@ -28,6 +30,7 @@ def test_invalid_failure_type_fails():
             retrieval_quality=0.9,
             answer_quality=0.8,
             failure_type="unknown",
+            is_abstention=False,
             reason="Invalid failure type.",
         )
 
@@ -39,6 +42,7 @@ def test_score_above_one_fails():
             retrieval_quality=1.5,
             answer_quality=0.8,
             failure_type="none",
+            is_abstention=False,
             reason="Invalid score.",
         )
 
@@ -61,6 +65,7 @@ def test_judge_answer_returns_structured_verdict(monkeypatch):
         "retrieval_quality": 1.0,
         "answer_quality": 0.9,
         "failure_type": "none",
+        "is_abstention": False,
         "reason": "The answer is supported by the context.",
     }
     calls = []
@@ -89,6 +94,7 @@ def test_judge_answer_returns_structured_verdict(monkeypatch):
     assert verdict.retrieval_quality == 1.0
     assert verdict.answer_quality == 0.9
     assert verdict.failure_type == "none"
+    assert verdict.is_abstention is False
     assert calls == [(judge.JUDGE_MODEL, judge.JudgeVerdict)]
 
 
@@ -125,6 +131,7 @@ def test_graph_retries_after_retrieval_failure(monkeypatch):
             retrieval_quality=0.2,
             answer_quality=0.0,
             failure_type="retrieval",
+            is_abstention=False,
             reason="The retrieved context is irrelevant.",
         ),
         JudgeVerdict(
@@ -132,6 +139,7 @@ def test_graph_retries_after_retrieval_failure(monkeypatch):
             retrieval_quality=0.9,
             answer_quality=0.9,
             failure_type="none",
+            is_abstention=False,
             reason="The answer is supported by the context.",
         ),
     ])
@@ -247,6 +255,7 @@ def test_graph_retries_generation_with_same_chunks(monkeypatch):
             retrieval_quality=0.9,
             answer_quality=0.2,
             failure_type="generation",
+            is_abstention=False,
             reason="The answer is not sufficiently supported.",
         ),
         JudgeVerdict(
@@ -254,6 +263,7 @@ def test_graph_retries_generation_with_same_chunks(monkeypatch):
             retrieval_quality=0.9,
             answer_quality=0.9,
             failure_type="none",
+            is_abstention=False,
             reason="The corrected answer is supported.",
         ),
     ])
@@ -360,6 +370,7 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
             retrieval_quality=0.2,
             answer_quality=0.1,
             failure_type="retrieval",
+            is_abstention=False,
             reason="Retrieved context is irrelevant.",
         ),
         JudgeVerdict(
@@ -367,6 +378,7 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
             retrieval_quality=0.3,
             answer_quality=0.1,
             failure_type="retrieval",
+            is_abstention=False,
             reason="The rewritten query still retrieves irrelevant context.",
         ),
         JudgeVerdict(
@@ -374,6 +386,7 @@ def test_graph_abstains_after_two_failed_retries(monkeypatch):
             retrieval_quality=0.2,
             answer_quality=0.1,
             failure_type="retrieval",
+            is_abstention=False,
             reason="The context is still irrelevant.",
         ),
     ])
