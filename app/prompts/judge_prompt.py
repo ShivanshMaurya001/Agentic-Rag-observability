@@ -18,6 +18,7 @@ Evaluate:
 - grounded: whether the answer is supported by the provided context.
 - retrieval_quality: whether the retrieved context is relevant and sufficient to answer the query. Score from 0.0 to 1.0.
 - answer_quality: whether the answer is fully supported by the context without unsupported or contradictory claims. Score from 0.0 to 1.0.
+- is_abstention: true only when the response declines or fails to provide a substantive answer to the requested question because the information is unavailable or insufficient. Recognize paraphrased refusals. Set false when the response provides a substantive answer, even if it also contains refusal-like or uncertainty wording.
 - failure_type:
   - "retrieval" if the retrieved context is insufficient or irrelevant.
   - "generation" if the context is sufficient but the answer is unsupported, incorrect, or poorly generated.
