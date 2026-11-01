@@ -9,6 +9,11 @@ from eval.eval_dataset import load_eval_queries
 
 ABSTAINED_OUTCOME = "abstained_judge_rejected"
 NOT_FOUND_SENTENCE = "The answer was not found in the document."
+HALLUCINATION_RATE_STATUS = (
+    "ground-truth proxy: answered adversarial queries plus answered "
+    "non-adversarial queries with answer_correct=False; answer_correct "
+    "uses expected-answer key-term coverage (threshold 0.6)"
+)
 
 # Lightweight offline normalization; intentionally not a semantic metric.
 STOPWORDS = {
@@ -19,7 +24,17 @@ STOPWORDS = {
 
 
 def is_abstained(row: dict[str, Any]) -> bool:
-    """Use the same abstention rule for baseline and corrected results."""
+    """Use the final judge classification, then legacy/baseline fallbacks."""
+    attempts = row.get("attempts")
+    if isinstance(attempts, list) and attempts:
+        final_attempt = attempts[-1]
+        if isinstance(final_attempt, dict):
+            verdict = final_attempt.get("judge_verdict")
+            if isinstance(verdict, dict):
+                is_abstention = verdict.get("is_abstention")
+                if isinstance(is_abstention, bool):
+                    return is_abstention
+
     if row.get("final_outcome") == ABSTAINED_OUTCOME:
         return True
 
@@ -96,9 +111,35 @@ def calculate_metrics(
         if is_abstained(row)
     ]
 
-    # No exact hallucination-rate formula is specified in the Blueprint.
-    hallucination_rate = None
-    hallucination_rate_status = "not measured"
+    answered_rows = [row for row in rows if not is_abstained(row)]
+    unknown_answer_correct_rows = [
+        row for row in answered_rows
+        if not row["is_adversarial"]
+        and not isinstance(row.get("answer_correct"), bool)
+    ]
+
+    if not answered_rows:
+        hallucination_rate = None
+        hallucination_rate_status = (
+            "not measured: no answered queries; "
+            f"{HALLUCINATION_RATE_STATUS}"
+        )
+    elif unknown_answer_correct_rows:
+        hallucination_rate = None
+        hallucination_rate_status = (
+            "incomplete: answer_correct is missing, null, or non-boolean "
+            "for answered "
+            f"non-adversarial queries; {HALLUCINATION_RATE_STATUS}"
+        )
+    else:
+        hallucinated_answered_rows = [
+            row for row in answered_rows
+            if row["is_adversarial"] or row.get("answer_correct") is False
+        ]
+        hallucination_rate = (
+            len(hallucinated_answered_rows) / len(answered_rows)
+        )
+        hallucination_rate_status = HALLUCINATION_RATE_STATUS
 
     recall_values: list[float] = []
     hit_values: list[float] = []
