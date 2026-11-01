@@ -4,6 +4,7 @@ from eval.baseline_runner import (
     NOT_FOUND_SENTENCE,
     answer_correctness_score,
     calculate_metrics,
+    is_abstained,
     run_comparison,
 )
 
@@ -59,8 +60,10 @@ def test_calculate_metrics():
     metrics = calculate_metrics(rows)
 
     assert metrics["total_queries"] == 3
-    assert metrics["hallucination_rate"] is None
-    assert metrics["hallucination_rate_status"] == "not measured"
+    assert metrics["hallucination_rate"] == 1 / 2
+    assert metrics["hallucination_rate_status"].startswith(
+        "ground-truth proxy:"
+    )
     assert metrics["false_answer_rate"] == 1 / 2
     assert metrics["correct_abstention_rate"] == 1 / 2
     assert metrics["abstention_rate"] == 1 / 3
@@ -121,6 +124,7 @@ def test_false_answer_rate_counts_answered_adversarial_queries():
     assert metrics["false_answer_rate"] == 1 / 2
     assert metrics["correct_abstention_rate"] == 1 / 2
     assert metrics["abstention_rate"] == 1 / 2
+    assert metrics["hallucination_rate"] == 1.0
 
 
 def test_adversarial_abstention_by_final_outcome():
@@ -139,6 +143,10 @@ def test_adversarial_abstention_by_final_outcome():
     assert metrics["false_answer_rate"] == 0.0
     assert metrics["correct_abstention_rate"] == 1.0
     assert metrics["abstention_rate"] == 1.0
+    assert metrics["hallucination_rate"] is None
+    assert metrics["hallucination_rate_status"].startswith(
+        "not measured: no answered queries; ground-truth proxy:"
+    )
 
 
 def test_baseline_not_found_sentence_counts_as_adversarial_abstention():
@@ -158,7 +166,125 @@ def test_baseline_not_found_sentence_counts_as_adversarial_abstention():
     assert metrics["correct_abstention_rate"] == 1.0
     assert metrics["abstention_rate"] == 1.0
     assert metrics["hallucination_rate"] is None
-    assert metrics["hallucination_rate_status"] == "not measured"
+    assert metrics["hallucination_rate_status"].startswith(
+        "not measured: no answered queries; ground-truth proxy:"
+    )
+
+
+def test_hallucination_rate_uses_answered_ground_truth_proxy_only():
+    rows = [
+        {
+            "is_adversarial": True,
+            "final_outcome": "answered",
+            "answer": "A fabricated response.",
+            "answer_correct": None,
+        },
+        {
+            "is_adversarial": False,
+            "final_outcome": "answered",
+            "answer": "Incorrect answer.",
+            "answer_correct": False,
+        },
+        {
+            "is_adversarial": False,
+            "final_outcome": "answered",
+            "answer": "Correct answer.",
+            "answer_correct": True,
+        },
+        {
+            "is_adversarial": False,
+            "final_outcome": ABSTAINED_OUTCOME,
+            "answer": "I cannot answer.",
+            "answer_correct": False,
+        },
+    ]
+
+    metrics = calculate_metrics(rows)
+
+    assert metrics["hallucination_rate"] == 2 / 3
+
+
+def test_hallucination_rate_is_incomplete_for_missing_or_null_correctness():
+    rows = [
+        {
+            "is_adversarial": False,
+            "final_outcome": "answered",
+            "answer": "An answer without a saved correctness label.",
+        },
+        {
+            "is_adversarial": False,
+            "final_outcome": "answered",
+            "answer": "An answer with a null correctness label.",
+            "answer_correct": None,
+        },
+    ]
+
+    for row in rows:
+        metrics = calculate_metrics([row])
+
+        assert metrics["hallucination_rate"] is None
+        assert metrics["hallucination_rate_status"].startswith(
+            "incomplete: answer_correct is missing, null, or non-boolean "
+            "for answered non-adversarial queries; "
+            "ground-truth proxy:"
+        )
+
+
+def test_paraphrased_refusal_uses_final_judge_abstention_classification():
+    row = {
+        "final_outcome": "answered_after_retry",
+        "answer": "I couldn't find enough information to answer that.",
+        "attempts": [
+            {"judge_verdict": {"is_abstention": True}},
+        ],
+    }
+
+    assert is_abstained(row) is True
+
+
+def test_substantive_answer_with_refusal_like_wording_is_not_abstention():
+    row = {
+        "final_outcome": "answered_after_retry",
+        "answer": (
+            "The document does not specify the exact date, but it states "
+            "that training used 2024 data."
+        ),
+        "attempts": [
+            {"judge_verdict": {"is_abstention": False}},
+        ],
+    }
+
+    assert is_abstained(row) is False
+
+
+def test_rows_without_explicit_judge_classification_use_legacy_fallbacks():
+    assert is_abstained({
+        "final_outcome": ABSTAINED_OUTCOME,
+        "answer": "A different abstention message.",
+        "attempts": [{"judge_verdict": {}}],
+    }) is True
+    assert is_abstained({
+        "final_outcome": "answered",
+        "answer": NOT_FOUND_SENTENCE,
+        "attempts": [{"judge_verdict": {}}],
+    }) is True
+    assert is_abstained({
+        "final_outcome": "answered",
+        "answer": "A substantive legacy answer.",
+    }) is False
+
+
+def test_explicit_final_judge_classification_takes_precedence():
+    row = {
+        "final_outcome": ABSTAINED_OUTCOME,
+        "answer": NOT_FOUND_SENTENCE,
+        "attempts": [
+            {"judge_verdict": {"is_abstention": True}},
+            {"judge_verdict": {"is_abstention": False}},
+        ],
+    }
+
+    assert is_abstained(row) is False
 
 
 def test_run_comparison_returns_both_modes():
