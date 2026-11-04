@@ -73,6 +73,12 @@ def log_attempt(
     judge_cost: float = 0,
 ) -> None:
     with get_connection() as connection:
+        # Stable run IDs can be logged again when an evaluation is rerun.
+        # Replace only the same attempt number; retries and other runs remain intact.
+        connection.execute(
+            "DELETE FROM attempts WHERE run_id = ? AND attempt_number = ?",
+            (run_id, attempt_number),
+        )
         _insert_attempt(
             connection=connection,
             run_id=run_id,

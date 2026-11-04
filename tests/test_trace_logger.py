@@ -55,6 +55,57 @@ def test_log_attempt_writes_row(tmp_path, monkeypatch):
     assert abs(row["cost"] - 0.006) < 1e-9
 
 
+def test_log_attempt_replaces_same_attempt_only(tmp_path, monkeypatch):
+    test_db = tmp_path / "test_traces.db"
+
+    def get_test_connection():
+        connection = sqlite3.connect(test_db)
+        connection.row_factory = sqlite3.Row
+        return connection
+
+    monkeypatch.setattr(db, "get_connection", get_test_connection)
+    monkeypatch.setattr(
+        "app.trace_logger.get_connection",
+        get_test_connection,
+    )
+    db.init_db()
+
+    def write_attempt(run_id, attempt_number, answer, latency):
+        log_attempt(
+            run_id=run_id,
+            attempt_number=attempt_number,
+            query_used="What is RAG?",
+            retrieved_chunks=[],
+            generated_answer=answer,
+            judge_verdict={},
+            retrieve_latency_ms=latency,
+        )
+
+    write_attempt("same-run", 0, "initial with missing timing", 0)
+    write_attempt("same-run", 0, "initial with measured timing", 12)
+    write_attempt("same-run", 1, "retry one", 15)
+    write_attempt("same-run", 2, "retry two", 18)
+    write_attempt("other-run", 0, "other initial", 20)
+
+    with get_test_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT run_id, attempt_number, generated_answer, latency_ms
+            FROM attempts ORDER BY run_id, attempt_number
+            """
+        ).fetchall()
+
+    assert [
+        (row["run_id"], row["attempt_number"]) for row in rows
+    ] == [("other-run", 0), ("same-run", 0), ("same-run", 1), ("same-run", 2)]
+    same_run_initial = next(
+        row for row in rows
+        if row["run_id"] == "same-run" and row["attempt_number"] == 0
+    )
+    assert same_run_initial["generated_answer"] == "initial with measured timing"
+    assert same_run_initial["latency_ms"] == 12
+
+
 def test_log_run_writes_row(tmp_path, monkeypatch):
     test_db = tmp_path / "test_traces.db"
 
