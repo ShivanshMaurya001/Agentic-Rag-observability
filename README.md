@@ -68,20 +68,20 @@ The system allows a maximum of two retry attempts.
 
 ---
 
-## M3 Test Results
+## Test Results
 
 | Test detail | Result |
 |---|---:|
 | Test command | `python -m pytest -v --basetemp=.pytest_tmp` |
-| Tests passed | 13 |
+| Tests passed | 74 |
 | Warnings | 2 |
 | Warning type | FastAPI `on_event` deprecation warnings |
 
 ---
 
-## M4 Evaluation Methodology
+## Evaluation Methodology
 
-The M4 evaluation compares two execution modes:
+The evaluation compares two execution modes:
 
 1. **Baseline:** The original RAG pipeline without corrective retries.
 2. **Corrected:** The RAG pipeline with structured judging and corrective retry handling.
@@ -143,9 +143,9 @@ This is a ground-truth evaluation proxy, not a separate semantic hallucination d
 
 ---
 
-## M4 Baseline vs Corrected Results
+## Baseline vs Corrected Results
 
-The following table contains the saved M4 evaluation results.
+The following table contains the saved  evaluation results.
 
 ### Key Metrics Comparison
 
@@ -195,17 +195,17 @@ The results show:
 - The corrected hallucination proxy increased slightly from 56.52% to 57.45%.
 - General Abstention Rate decreased from 23.33% to 21.67%.
 
-**Conclusion:** The current M4 evaluation does not demonstrate an improvement in aggregate answer correctness or retrieval performance from the corrective retry pipeline.
+**Conclusion:** The current evaluation does not demonstrate an improvement in aggregate answer correctness or retrieval performance from the corrective retry pipeline.
 
 This does not prove that the retry workflow never helps. Its behavior and limitations need to be interpreted alongside the attempt-level results.
 
 ---
 
-## M4 Corrective Retry Analysis
+## Corrective Retry Analysis
 
 ### Retry Statistics
 
-In the saved M4 evaluation (60 queries), **13 corrected-mode queries triggered a retry: 12 adversarial and 1 answerable.**
+In the saved evaluation (60 queries), **13 corrected-mode queries triggered a retry: 12 adversarial and 1 answerable.**
 
 Some queries required more than one retry round.
 
