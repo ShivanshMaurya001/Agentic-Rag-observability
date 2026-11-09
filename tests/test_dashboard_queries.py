@@ -2,6 +2,7 @@ import sqlite3
 
 import pytest
 
+from dashboard import queries as dashboard_queries
 from dashboard.queries import (
     NOT_RECORDED,
     NOT_STORED,
@@ -323,3 +324,42 @@ def test_connection_is_read_only_and_queries_do_not_change_database(database_pat
             database.execute("UPDATE runs SET final_outcome = 'changed'")
         assert get_total_runs(database) == 5
     assert database_path.read_bytes() == before
+
+
+def test_connection_uses_traces_db_path_environment_variable(tmp_path, monkeypatch):
+    environment_path = tmp_path / "environment_traces.db"
+    _create_database(environment_path)
+    with sqlite3.connect(environment_path) as connection:
+        connection.execute(
+            """INSERT INTO runs (
+                   run_id, original_query, final_outcome, total_attempts,
+                   mode, is_adversarial
+               ) VALUES ('env-run', 'Environment database', 'answered', 1, 'baseline', 0)"""
+        )
+    monkeypatch.setenv("TRACES_DB_PATH", str(environment_path))
+
+    with open_readonly_connection() as database:
+        assert get_total_runs(database) == 1
+        with pytest.raises(sqlite3.OperationalError):
+            database.execute("UPDATE runs SET final_outcome = 'changed'")
+
+
+def test_connection_falls_back_to_default_db_path(tmp_path, monkeypatch):
+    default_path = tmp_path / "default_traces.db"
+    _create_database(default_path)
+    monkeypatch.delenv("TRACES_DB_PATH", raising=False)
+    monkeypatch.setattr(dashboard_queries, "DB_PATH", default_path)
+
+    with open_readonly_connection() as database:
+        assert get_total_runs(database) == 0
+
+
+def test_explicit_connection_path_takes_precedence_over_environment(
+    database_path, tmp_path, monkeypatch
+):
+    environment_path = tmp_path / "environment_traces.db"
+    _create_database(environment_path)
+    monkeypatch.setenv("TRACES_DB_PATH", str(environment_path))
+
+    with open_readonly_connection(database_path) as database:
+        assert get_total_runs(database) == 5

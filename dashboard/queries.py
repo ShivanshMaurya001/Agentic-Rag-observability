@@ -1,5 +1,6 @@
 """Read-only SQLite queries used by the M5 dashboard."""
 
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -15,10 +16,15 @@ MODES = ("baseline", "corrected")
 
 
 def open_readonly_connection(
-    db_path: str | Path = DB_PATH,
+    db_path: str | Path | None = None,
 ) -> sqlite3.Connection:
     """Open an existing SQLite database without permitting writes."""
-    path = Path(db_path).resolve()
+    selected_path = (
+        db_path
+        if db_path is not None
+        else os.getenv("TRACES_DB_PATH") or DB_PATH
+    )
+    path = Path(selected_path).resolve()
     connection = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     return connection

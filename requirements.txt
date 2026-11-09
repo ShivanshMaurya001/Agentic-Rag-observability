@@ -12,3 +12,4 @@ openai==3.20.0
 langgraph
 langsmith
 streamlit
+altair
