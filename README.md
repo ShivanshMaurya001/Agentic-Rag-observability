@@ -1,4 +1,11 @@
 # Agentic RAG Observability & Self-Correction System
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_Workflow-1C3C3C)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Store-orange)
+![OpenAI](https://img.shields.io/badge/OpenAI-LLM_API-412991?logo=openai&logoColor=white)
+![LangSmith](https://img.shields.io/badge/LangSmith-Tracing-blueviolet)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?logo=streamlit&logoColor=white)
 
 An observable Retrieval-Augmented Generation (RAG) system with structured LLM judging, corrective retry workflows, abstention handling, baseline comparison, and an evaluation dashboard.
 
@@ -20,6 +27,97 @@ The system includes:
 
 **Important:** Self-correction is not assumed to improve factual accuracy. The evaluation compares the baseline and corrected pipelines to identify actual improvements, unchanged metrics, and limitations.
 
+## Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/ShivanshMaurya001/Agentic-Rag-observability
+cd Agentic-Rag-observability
+```
+
+### 2. Create and Activate Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+**Windows:**
+
+```powershell
+venv\Scripts\activate
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the project root using `.env.example` as a reference.
+
+Add your API keys:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=your_openai_api_key
+LANGSMITH_API_KEY=your_langsmith_api_key
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Add Documents and Run Ingestion
+
+Place PDF documents inside `test_data/` and run:
+
+```bash
+python ingest_pdfs.py
+```
+
+### 6. Start the API
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### 7. Run Evaluation
+
+**Note:** Evaluation makes real OpenAI API calls and may incur API costs.
+
+```bash
+python scripts/run_baseline_eval.py
+```
+
+To resume an interrupted evaluation:
+
+```bash
+python scripts/run_baseline_eval.py --resume
+```
+
+### 8. Launch the Dashboard
+
+```bash
+python -m streamlit run dashboard/streamlit_app.py
+```
+
+## Dashboard Preview
+
+### Dashboard Overview
+![Dashboard Overview](screenshots/dashboard.png)
+
+### Execution and Retry Analysis
+![Execution and Retry Analysis](screenshots/retry.png)
+
+### Decision Trace and Failure Cases
+![Decision Trace and Failure Cases](screenshots/retry11.png)
+
+
+## Key Findings
+
+- **No aggregate accuracy improvement:** Answer correctness remained 20/47 (42.55%) in both baseline and corrected evaluation.
+- **Correct refusals triggered retries:** 12 adversarial queries triggered retries because insufficient retrieval context was classified as a retrieval failure.
+- **Judge approval does not guarantee correctness:** `answered_after_retry` indicates judge acceptance, not necessarily factual correctness.
+- **Abstention detection bug fixed:** The initial detector missed natural-language refusals. After fixing it, the corrected false-answer rate changed from 61.5% to 0%.
 ---
 
 ## System Architecture
@@ -44,8 +142,7 @@ flowchart TD
 
     F --> J[Trace Logging]
     I --> J
-    J --> K[Baseline Comparison]
-    K --> L[Observability Dashboard]
+    J --> L[Observability Dashboard]
 ```
 
 The judge evaluates the answer against the retrieved context and produces a structured verdict.
@@ -118,7 +215,7 @@ Additional rules:
 - Abstained answerable queries are counted as incorrect.
 - Adversarial queries are not scored for answer correctness.
 
-### Hallucination Rate
+### Answered-but-wrong rate (proxy)
 
 The approved offline hallucination proxy uses the following logic:
 
@@ -138,7 +235,7 @@ This is a ground-truth evaluation proxy, not a separate semantic hallucination d
 | Recall@K | Retrieval recall against the relevant chunks. |
 | Hit Rate@K | Whether at least one relevant chunk was retrieved. |
 | Answer Correctness | Expected-answer key-term coverage. |
-| Hallucination Rate | Offline ground-truth/key-term coverage proxy. |
+| Answered-but-wrong rate (proxy) | Offline ground-truth/key-term coverage proxy. |
 | Judge-approved after Retry | Query-level judge acceptance after corrective retries. |
 
 ---
@@ -153,7 +250,7 @@ The following table contains the saved  evaluation results.
 |---|---:|---:|
 | False Answer Rate | 0/13 = **0%** | 0/13 = **0%** |
 | Correct Abstention Rate | 13/13 = **100%** | 13/13 = **100%** |
-| Hallucination Rate | 26/46 = **56.52%** | 27/47 = **57.45%** |
+| Answered-but-wrong rate (proxy) | 26/46 = **56.52%** | 27/47 = **57.45%** |
 | Answer Correctness | 20/47 = **42.55%** | 20/47 = **42.55%** |
 | General Abstention Rate | 14/60 = **23.33%** | 13/60 = **21.67%** |
 | Recall@K | **72.34%** | **72.34%** |
@@ -297,3 +394,15 @@ The single retried answerable query moved from an initial abstention to a substa
 Therefore, the aggregate Answer Correctness remained 20/47 (42.55%).
 
 The unchanged Recall@K and Hit Rate@K also do not establish that the retry loop failed. The evaluation does not show a retrieval improvement, and the single retried answerable query used the same retrieved chunk IDs across both attempts
+
+## Limitations
+
+- **Small evaluation dataset:** 60 queries, including only 13 adversarial queries. Results are from a single evaluation run, with no confidence intervals.
+- **LLM non-determinism:** Model outputs may vary between runs.
+- **Same model for all LLM roles:** Generator, query rewriter and judge use the same model, which may introduce judge self-evaluation bias.
+- **Proxy-based correctness:** Answer correctness uses key-term coverage rather than semantic evaluation. The judge accepted 46 of 47 first attempts on answerable queries, while the offline metric classified only 20 of 47 as correct.
+- **Shared baseline attempts:** Baseline results reuse the corrected pipeline's first attempt, so both modes share the same initial retrieval and generation.
+- **Outcome classification limitation:** `answered_after_retry` can represent a judge-approved refusal. Offline evaluation classifies abstentions separately.
+- **Dashboard comparison limitation:** The dashboard reads recorded SQLite traces across runs. Its aggregate baseline and corrected rates are not a matched comparison. API cost is not recorded.
+- **Unresolved design consideration:** Retry routing does not currently check `is_abstention`. This behavior remains documented under PRD Open Decision C.
+
