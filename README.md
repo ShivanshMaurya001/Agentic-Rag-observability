@@ -9,6 +9,10 @@
 
 An observable Retrieval-Augmented Generation (RAG) system with structured LLM judging, corrective retry workflows, abstention handling, baseline comparison, and an evaluation dashboard.
 
+## 🚀 Live Demo
+
+**Dashboard:** https://agentic-rag-observability.onrender.com
+
 ## Project Overview
 
 This project explores how a RAG pipeline can evaluate its own generated answers, identify retrieval or generation failures, and attempt corrective actions through a controlled retry workflow.
