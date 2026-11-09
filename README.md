@@ -1,5 +1,5 @@
 # Agentic RAG Observability & Self-Correction System
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_Workflow-1C3C3C)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Store-orange)
@@ -39,13 +39,13 @@ cd Agentic-Rag-observability
 ### 2. Create and Activate Virtual Environment
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 **Windows:**
 
 ```powershell
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
 
 ### 3. Configure Environment Variables
@@ -110,7 +110,6 @@ python -m streamlit run dashboard/streamlit_app.py
 
 ### Decision Trace and Failure Cases
 ![Decision Trace and Failure Cases](screenshots/retry11.png)
-
 
 ## Key Findings
 
@@ -193,6 +192,8 @@ The evaluation compares two execution modes:
 | Baseline evaluation rows | 60 |
 | Corrected evaluation rows | 60 |
 
+**Corpus:** 15 PDFs on LLM and RAG topics (`test_data/`).
+
 The adversarial queries test whether the system can avoid providing unsupported answers when the requested information is unavailable or insufficiently supported by the documents.
 
 ### Answer Correctness Metric
@@ -217,13 +218,12 @@ Additional rules:
 
 ### Answered-but-wrong rate (proxy)
 
-The approved offline hallucination proxy uses the following logic:
+The approved offline answered-but-wrong rate proxy uses the following logic:
 
-- Every answered adversarial query counts as a hallucination.
-- An answered non-adversarial query counts as a hallucination when its saved `answer_correct` value is false.
-- The denominator is the total number of answered queries.
+- Every answered adversarial query counts as an answered-but-wrong response.
+- An answered non-adversarial query counts as an answered-but-wrong response when its saved `answer_correct` value is false.
 
-This is a ground-truth evaluation proxy, not a separate semantic hallucination detector or a direct measure of all unsupported claims.
+This is a ground-truth evaluation proxy, not a separate semantic answered-but-wrong detector or a direct measure of all unsupported claims.
 
 ### Other Evaluation Metrics
 
@@ -242,7 +242,7 @@ This is a ground-truth evaluation proxy, not a separate semantic hallucination d
 
 ## Baseline vs Corrected Results
 
-The following table contains the saved  evaluation results.
+The following table contains the saved evaluation results.
 
 ### Key Metrics Comparison
 
@@ -264,7 +264,7 @@ The following charts visualize the baseline and corrected evaluation metrics.
 ```mermaid
 xychart-beta
     title "Baseline vs Corrected Metrics (%)"
-    x-axis ["Correctness", "Recall@K", "Hit Rate@K", "Hallucination"]
+    x-axis ["Correctness", "Recall@K", "Hit Rate@K", "Answered-but-wrong"]
     y-axis "Percentage" 0 --> 100
     bar [42.55, 72.34, 74.47, 56.52]
     bar [42.55, 72.34, 74.47, 57.45]
@@ -289,7 +289,7 @@ The results show:
 - Hit Rate@K remained unchanged at 74.47%.
 - False Answer Rate remained at 0% in both modes.
 - Correct Abstention Rate remained at 100% in both modes.
-- The corrected hallucination proxy increased slightly from 56.52% to 57.45%.
+- The corrected answered-but-wrong rate proxy increased slightly from 56.52% to 57.45%.
 - General Abstention Rate decreased from 23.33% to 21.67%.
 
 **Conclusion:** The current evaluation does not demonstrate an improvement in aggregate answer correctness or retrieval performance from the corrective retry pipeline.
@@ -393,7 +393,7 @@ The single retried answerable query moved from an initial abstention to a substa
 
 Therefore, the aggregate Answer Correctness remained 20/47 (42.55%).
 
-The unchanged Recall@K and Hit Rate@K also do not establish that the retry loop failed. The evaluation does not show a retrieval improvement, and the single retried answerable query used the same retrieved chunk IDs across both attempts
+The unchanged Recall@K and Hit Rate@K also do not establish that the retry loop failed. The evaluation does not show a retrieval improvement, and the single retried answerable query used the same retrieved chunk IDs across both attempts.
 
 ## Limitations
 
@@ -406,3 +406,20 @@ The unchanged Recall@K and Hit Rate@K also do not establish that the retry loop 
 - **Dashboard comparison limitation:** The dashboard reads recorded SQLite traces across runs. Its aggregate baseline and corrected rates are not a matched comparison. API cost is not recorded.
 - **Unresolved design consideration:** Retry routing does not currently check `is_abstention`. This behavior remains documented under PRD Open Decision C.
 
+## Design Decisions
+
+- **Dense retrieval:** ChromaDB is used as the v1 vector retrieval backend.
+- **Retrieval interface:** All retrieval-time reads use the common `retrieve()` interface.
+- **Corrective workflow:** LangGraph manages retrieval failures, generation failures, retries, and abstention.
+- **Observability:** SQLite stores execution traces, which are displayed through a read-only Streamlit dashboard.
+- **LLM providers:** Gemini handles embeddings; OpenAI is used for generation, query rewriting, regeneration, and judging.
+- **Scope control:** Hybrid search is not implemented in v1. Open Decisions A, B, and C remain unresolved.
+
+## Future Work
+
+- Resolve Open Decision C before changing judge-only routing.
+- Investigate disagreement between judge acceptance and offline answer correctness.
+- Evaluate answerability and abstention behavior on a larger dataset.
+- Implement and verify actual API cost measurement before reporting costs.
+- Re-evaluate the corrective workflow after any approved changes.
+- **Optional:** Validate the custom judge using RAGAS.
